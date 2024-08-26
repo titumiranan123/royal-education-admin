@@ -1,0 +1,48 @@
+/* Animation styles for before pseudo-element */
+.video-play-button:before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  right: -35px;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 65px;
+  height: 65px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(191, 17, 235, 0.65);
+  /* Use rgba for transparent background */
+  border-radius: 50%;
+  animation: pulse-border 1500ms ease-out infinite;
+}
+@media (max-width: 768px) {
+  .video-play-button:before {
+    right: 7.5px; /* Adjust right positioning */
+    width: 50px; /* Decrease width */
+    height: 50px; /* Decrease height */
+  }
+}
+.video-play-button img {
+  position: relative;
+  z-index: 3;
+  max-width: 100%;
+  height: auto;
+}
+.video-play-button:hover:after {
+  background: #e415ff;
+  /* Change background color on hover */
+}
+
+@keyframes pulse-border {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}

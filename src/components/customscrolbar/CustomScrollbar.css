@@ -1,0 +1,30 @@
+/* CustomScrollbar.css */
+
+/* Style the outer container */
+.custom-scrollbar {
+  /* Set the height of the scrollable container */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Style the inner content */
+.custom-scrollbar-content {
+  padding-right: 16px; /* Adjust padding to accommodate scrollbar width */
+}
+
+/* Define appearance of the scrollbar thumb */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Set width of the scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    270deg,
+    #8419b6 75.37%,
+    #5400ee 105.93%
+  ); /* Color of the scrollbar thumb */
+  border-radius: 5px; /* Rounded corners of the scrollbar thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #7717d1; /* Color on hover */
+}
