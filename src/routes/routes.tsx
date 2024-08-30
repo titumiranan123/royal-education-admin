@@ -12,10 +12,18 @@ import MCQstore from "../page/admin/mcq/MCQstore";
 import Updatelayout from "../page/admin/Updatecourse/Updatelayout";
 import CourseContent from "../page/admin/courseForm/CourseContent";
 import CourseExam from "../page/admin/courseForm/CourseExam";
+import Loginpage from "../page/loginpage/Loginpage";
 
 
 export const routes = createBrowserRouter([
-
+  {
+    path: "/",
+    element: <Loginpage />,
+  },
+  {
+    path: "/login",
+    element: <Loginpage />,
+  },
   {
     path: "/dashboard",
     element: <DashboardLayout />,
@@ -50,18 +58,18 @@ export const routes = createBrowserRouter([
         element: <Updatelayout />,
         children: [
           {
-            path: ':id',
-            element: <Updatecourse />
+            path: ":id",
+            element: <Updatecourse />,
           },
           {
-            path: 'video-upload/:id',
-            element: <CourseContent />
+            path: "video-upload/:id",
+            element: <CourseContent />,
           },
           {
-            path: 'exam/:id',
-            element: <CourseExam />
+            path: "exam/:id",
+            element: <CourseExam />,
           },
-        ]
+        ],
       },
     ],
   },
