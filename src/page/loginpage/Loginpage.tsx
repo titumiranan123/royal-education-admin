@@ -80,14 +80,9 @@ const Loginpage: React.FC = () => {
           <div className="mt-[85px] p-[2px] rounded-lg">
             <div className="w-[95%] mx-auto md:w-[500px] flex justify-center items-center px-10  flex-col rounded-lg h-full bg-[#201E35]">
               <div className="mt-[32px] text-white text-[20px] font-bold">
-                Log In
+             Welcome Back !
               </div>
-              <p className="banglafont mt-4 text-center text-sm text-white">
-                আপনার <span>Email</span> এবং <span>পাসওয়ার্ড</span> দিয়ে লগ ইন
-                করুন যেগুলো রেজিস্ট্রেশনের সময় ব্যবহার করেছিলেন। অথবা,{" "}
-                <span>Google</span> বা <span>Facebook</span> আইকন ব্যবহার করে লগ
-                ইন করতে পারেন।
-              </p>
+             
 
               <div className="py-[29px] px-[22px]">
                 <form
@@ -137,12 +132,6 @@ const Loginpage: React.FC = () => {
                     Log In
                   </button>
                 </form>
-                <div className="flex justify-center mt-6 gap-1 items-center">
-                  <span className="border text-white border-white w-[35%] h-[1px]"></span>
-                  <p className="text-white w-[28%]">Or login With</p>
-                  <span className="border border-white w-[35%] h-[1px]"></span>
-                </div>
-               
               </div>
             </div>
           </div>
