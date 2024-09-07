@@ -30,13 +30,12 @@ interface Props {
 
 const CoursesExam: React.FC<Props> = ({ id }) => {
     const { data, refetch } = useCourse();
-
     const [open, setOpen] = useState(false)
+    const [examid, setExamId] = useState('')
     const [courseContentData, setCourseContentData] = useState<Subject[]>([]);
 
     useEffect(() => {
         const course = data?.find((p: Course) => p.id === id);
-
         if (course) {
             const initialData = course.course_content.map((subject: any) => ({
                 subject_id: subject.id,
@@ -90,19 +89,6 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                 const examName = (document.getElementById('examName') as HTMLInputElement).value;
                 const examTime = (document.getElementById('examTime') as HTMLInputElement).value;
                 const examType = (document.getElementById('examType') as HTMLSelectElement).value;
-
-                // const updatedContentData = [...courseContentData];
-                // updatedContentData[sectionIndex].exam.push({
-                //     id: "some-unique-id", // Generate a unique ID here
-                //     subject_id: updatedContentData[sectionIndex].subject_id,
-                //     exam_name: examName,
-                //     time: examTime,
-                //     exam_type: examType,
-                //     publish: 0,
-                //     questions: []
-                // });
-
-                // setCourseContentData(updatedContentData);
                 const data = {
                     subject_id: sectionIndex,
                     exam_name: examName,
@@ -118,7 +104,7 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                     body: JSON.stringify(data),
                 }).then((res) => res.json())
                     .then((info: any) => {
-                        console.log(info)
+                        console.log(info , "from exam")
                         refetch()
                         Swal.fire('Exam Created!', '', 'success');
                     })
@@ -162,10 +148,12 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
     const handleUploadQuestion = (sectionIndex: number) => {
         Swal.fire({
             html:
-                `<div class="swal2-content">
+                `
+                <div class="swal2-content">
           <p class="text-white font-semibold montserrat text-[24px]"> Written Question File </p>
           <input id="writtenQuestionFile" class="my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px] focus:outline-none border-none" placeholder="Written Question File">
-        </div>`,
+        </div>
+        `,
             focusConfirm: false,
             preConfirm: () => {
                 const writtenQuestionFile = (document.getElementById('writtenQuestionFile') as HTMLInputElement).value;
@@ -175,6 +163,7 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
         });
     };
     const closeModal = () => setOpen(!open)
+    console.log(examid);
     return (
         <div className="p-4">
             <h2 className="text-xl font-bold text-white mb-4">Course Exam</h2>
@@ -212,7 +201,11 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                                     </div>
                                     <div className="flex space-x-2">
                                         {exam.exam_type !== 'written' ?
-                                            <button onClick={() => setOpen(!open)} className="text-yellow-500 hover:text-yellow-700">
+                                            <button onClick={() => {
+                                                setExamId('')
+                                                setOpen(!open)
+                                                setExamId(exam.id);
+                                                }} className="text-yellow-500 hover:text-yellow-700">
                                                 Mcq Upload
                                             </button> : <button onClick={() => handleUploadQuestion(sectionIndex)} className="text-yellow-500 hover:text-yellow-700">
                                                 Questions Upload
@@ -244,7 +237,7 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
             {
                 open && (
                     <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center'>
-                        <QuizForm isVisible={open} onClose={closeModal} />
+                        <QuizForm examId = {examid} isVisible={open} onClose={closeModal} />
                     </div>
                 )
             }
