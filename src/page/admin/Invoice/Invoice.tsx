@@ -21,7 +21,7 @@ const Invoice: React.FC = () => {
     if (result.isConfirmed) {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/v1/enrollments/${id}/approve`,
+          `https://test.royaleducation.online/api/v1/enrollments/${id}/approve`,
           {
             method: "PUT",
           }

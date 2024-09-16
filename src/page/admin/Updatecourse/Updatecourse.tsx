@@ -85,7 +85,7 @@ const Updatecourse: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/course/${id}`,
+        `https://test.royaleducation.online/api/v1/course/${id}`,
         {
           method: "PUT",
           headers: {

@@ -26,9 +26,11 @@ const Createcourse: React.FC = () => {
     category: "",
     status: "",
   });
+  
   const [courseDetails, setDetails] = useState([
     { title: "", description: "" },
   ]);
+
   const [instructor, setInstructor] = useState([
     {
       img: "",
@@ -37,6 +39,7 @@ const Createcourse: React.FC = () => {
       institute: "",
     },
   ]);
+
   // const [courseContentData, setCourseContentData] = useState([
   //   {
   //     sectionTitle: "Section 1",
@@ -59,10 +62,8 @@ const Createcourse: React.FC = () => {
       course_instructors: instructor,
       course_benefits: benefits,
     };
-
-
     try {
-      const response = await fetch("http://localhost:3000/api/v1/course", {
+      const response = await fetch("https://test.royaleducation.online/api/v1/course", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

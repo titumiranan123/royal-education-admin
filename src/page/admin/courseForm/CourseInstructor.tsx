@@ -29,7 +29,6 @@ const CourseInstructor: React.FC<instructorPorp> = ({
   active,
   setActive,
 }) => {
-  console.log("instructor page ", instructor);
   const addInstructor = () => {
     setInstructor([
       ...instructor,
@@ -186,12 +185,12 @@ const CourseInstructor: React.FC<instructorPorp> = ({
             value="Prev"
             className="btn w-[180px] montserrat"
           />
-          <input
-            type="Update"
+          <button
+    
             onClick={() => handleSubmit()}
-            value="Next"
+          
             className="btn w-[180px] montserrat"
-          />
+          >Submit</button>
         </div>
       </div>
     </div>

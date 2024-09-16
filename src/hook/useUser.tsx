@@ -4,7 +4,7 @@ const useUser = () => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      const response = await fetch("http://localhost:3000/api/v1/users", {
+      const response = await fetch("https://test.royaleducation.online/api/v1/users", {
         method: "GET",
       });
 

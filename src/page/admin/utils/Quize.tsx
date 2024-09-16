@@ -21,7 +21,7 @@ const QuizForm = ({ isVisible, onClose, examId }:any) => {
       answer,
       exam_id: examId,
     };
-    fetch(`http://localhost:3000/api/v1/insert-mcq`, {
+    fetch(`https://test.royaleducation.online/api/v1/insert-mcq`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

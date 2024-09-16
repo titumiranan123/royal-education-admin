@@ -96,7 +96,7 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                     exam_type: examType,
                     publish: false
                 }
-                fetch(`http://localhost:3000/api/v1/create-exam`, {
+                fetch(`https://test.royaleducation.online/api/v1/create-exam`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

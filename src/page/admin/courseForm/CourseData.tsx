@@ -20,21 +20,26 @@ const CourseData: React.FC<Props> = ({
   setDetails,
   courseDetails,
 }) => {
+  
   const handleBenefitChange = (index: number, value: string) => {
+
     const updatedBenefits = [...benefits];
     updatedBenefits[index] = { title: value };
     setBenefit(updatedBenefits);
   };
-  console.log(courseDetails);
+
   const handleAddBenefit = () => {
     setBenefit([...benefits, { title: "" }]);
   };
+
   const handleAddCourseDetails = () => {
     setDetails([...courseDetails, { title: "", description: "" }]);
   };
+
   const handleRemoveCourseDetails = (index: number) => {
     setDetails(courseDetails.filter((_, idx) => idx !== index));
   };
+
   return (
     <div className="bg p-[3px] rounded-xl mt-24">
       <div className=" bg-[#0D0C11] p-5 m-auto  rounded-xl block">

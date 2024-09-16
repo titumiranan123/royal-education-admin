@@ -98,7 +98,7 @@
 //             };
 //             console.log(combinedData);
 //             const response = await fetch(
-//                 `http://localhost:3000/api/v1/upload-video/${id}`,
+//                 `https://test.royaleducation.online/api/v1/upload-video/${id}`,
 //                 {
 //                     method: "POST",
 //                     headers: {

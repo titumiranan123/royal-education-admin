@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -23,11 +24,9 @@ const Loginpage: React.FC = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  
-
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/login`, {
+      const response = await fetch(`https://test.royaleducation.online/api/v1/login`, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -57,7 +56,7 @@ const Loginpage: React.FC = () => {
         });
       }
     } catch (error) {
-      console.log(error);
+    
       Swal.fire({
         position: "center",
         icon: "error",

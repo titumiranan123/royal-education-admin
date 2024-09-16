@@ -47,7 +47,7 @@ const McqUploader: React.FC<mcqprop> = ({ subject }) => {
     };
     console.log(data);
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/exam/${id}`, {
+      const response = await fetch(`https://test.royaleducation.online/api/v1/exam/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

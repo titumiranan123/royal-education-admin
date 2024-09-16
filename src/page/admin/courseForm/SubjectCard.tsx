@@ -19,7 +19,7 @@ const SubjectCard: React.FC<cardprop> = ({ item, contentIndex, courseContentData
             const combinedData = { subject_id, ...item }
             console.log(combinedData);
             const response = await fetch(
-                `http://localhost:3000/api/v1/course-content`,
+                `https://test.royaleducation.online/api/v1/course-content`,
                 {
                     method: "POST",
                     headers: {
@@ -42,7 +42,6 @@ const SubjectCard: React.FC<cardprop> = ({ item, contentIndex, courseContentData
     };
     return (
         <div>
-
             <div>
                 <div className="flex flex-col gap-4 mt-5">
                     <label

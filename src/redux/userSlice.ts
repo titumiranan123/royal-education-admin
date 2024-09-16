@@ -74,7 +74,7 @@ const authSlice = createSlice({
 
       try {
         const response = await fetch(
-          "http://localhost:3000/api/v1/refreshtoken",
+          "https://test.royaleducation.online/api/v1/refreshtoken",
           {
             method: "GET",
             headers: {
@@ -113,7 +113,7 @@ export default authSlice.reducer;
 //     if (token) {
 //       try {
 //         const response = await fetch(
-//           "http://localhost:3000/api/v1/refreshtoken",
+//           "https://test.royaleducation.online/api/v1/refreshtoken",
 //           {
 //             method: "POST",
 //             headers: {

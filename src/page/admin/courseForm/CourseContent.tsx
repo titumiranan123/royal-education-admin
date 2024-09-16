@@ -284,7 +284,7 @@ const CourseContent: React.FC = () => {
                     pdf_title: pdfTitle,
                     pdf_link: pdfLink
                 }
-                fetch(`http://localhost:3000/api/v1/course-content`, {
+                fetch(`https://test.royaleducation.online/api/v1/course-content`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

@@ -28,7 +28,7 @@ const Singuppage: React.FC = () => {
       email: data.email,
       password: data.password,
     };
-    fetch("http://localhost:3000/api/v1/register", {
+    fetch("https://test.royaleducation.online/api/v1/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
