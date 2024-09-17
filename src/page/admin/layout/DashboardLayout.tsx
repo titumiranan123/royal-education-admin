@@ -18,10 +18,11 @@ import {
 } from "react-icons/ri";
 import user from "../../../assets/testimonial/user.png";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { decode } from "jwt-js-decode";
 import Cookies from "js-cookie";
-import { clearAuth, setAuth } from "../../../redux/userSlice";
+import { clearAuth, logout, setAuth } from "../../../redux/userSlice";
+import { RootState } from "../../../redux/Store";
 const DashboardLayout: React.FC = () => {
 const [isOpen, setIsOpen] = useState(false);
  const dispatch = useDispatch();
@@ -52,8 +53,6 @@ const [isOpen, setIsOpen] = useState(false);
      dispatch(clearAuth());
    }
  }, [dispatch]);
-
-
 
 
 
@@ -264,14 +263,16 @@ const [isOpen, setIsOpen] = useState(false);
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
-
+ const {user} = useSelector((state: RootState) => state.user);
+const dispatch = useDispatch()
   return (
     <div className="w-full sticky top-0 left-0  bg-gradient-to-tr min-h-screen from-[#DC02CE] to-[#5C53FE] pe-[2px]">
       <div className={`relative `}>
         <div className="bg-black p-10">
-          <img className="w-20 mx-auto h-20" src={user} alt="" />
+          <img className="w-20 mx-auto h-20" src={user?.photoUrl} alt="" />
           <p className="text-center text-white mt-5 montserrat font-semibold">
-            Teacher
+            <span className="text-[20px]"> {user?.name} </span>{" "}
+            <span className="ms-1 text-[14px]">({user?.role})</span>
           </p>
         </div>
         <nav className="bg-black   flex flex-col gap-2 mx-auto min-h-screen">
@@ -410,15 +411,16 @@ const Sidebar: React.FC = () => {
           </div>
           <div className="flex justify-center items-center mt-14">
             <div className="p-[1px] w-[207px] rounded-lg bg">
-              <a
-                href="#"
-                className="flex  items-center p-2  w-[200px]  bg-black justify-center rounded-lg "
-              >
+              <button
+              onClick={()=>{
+dispatch(logout())
+              }}
+              className="flex  items-center p-2  w-[200px]  bg-black justify-center rounded-lg ">
                 <RiLogoutBoxLine className="w-5   h-5 text-white  transition duration-75 " />
                 <span className="ms-1 gradient-text montserrat font-bold text-white">
                   Sign Out
                 </span>
-              </a>
+              </button>
             </div>
           </div>
         </nav>

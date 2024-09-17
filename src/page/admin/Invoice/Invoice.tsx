@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import useInvoice from "../../../hook/useInvoice";
@@ -48,7 +49,7 @@ const Invoice: React.FC = () => {
           text: "Failed to approve",
           icon: "error",
         });
-        console.error("Error approving:", error);
+    
       }
     }
   };

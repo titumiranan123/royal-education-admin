@@ -6,12 +6,9 @@ const useCourse = () => {
     queryKey: ["courses"],
     queryFn: async () => {
       const response = await api.get("/api/v1/course")
-
       return response.data;
     },
   });
-  
-  
   return { data, isLoading, error, refetch };
 };
 

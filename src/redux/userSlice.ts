@@ -51,6 +51,7 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       Cookies.remove("accessToken");
+      window.location.href='/'
     },
     setAuth(state, action: PayloadAction<{ user: any; accessToken: string }>) {
       const { user, accessToken } = action.payload;

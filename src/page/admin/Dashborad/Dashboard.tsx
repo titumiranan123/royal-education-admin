@@ -3,8 +3,12 @@ import { FaGraduationCap, FaSearch } from "react-icons/fa";
 import { PiUsersThreeBold } from "react-icons/pi";
 import CountUp from "react-countup";
 import Pricechart from "./Pricechart";
+import useCourse from "../../../hook/useCourse";
+import useUser from "../../../hook/useUser";
 
 const Dashboard: React.FC = () => {
+  const { data: courses } = useCourse();
+  const {data:users} = useUser()
   return (
     <div className="">
       <div className="bg p-[2px] md:w-[279px] w-[224px] -mt-8 rounded-lg">
@@ -30,7 +34,7 @@ const Dashboard: React.FC = () => {
                   TOTAL STUDENT
                 </h1>
                 <p className="text-[30px] font-bold text-white">
-                  <CountUp start={1} enableScrollSpy delay={2} end={1000} />
+                  <CountUp start={1} enableScrollSpy delay={2} end={users?.length} />
                 </p>
                 <p className="text-sm text-white">New student Add </p>
               </div>
@@ -63,7 +67,12 @@ const Dashboard: React.FC = () => {
                   TOTAL Course
                 </h1>
                 <p className="text-[30px] font-bold text-white">
-                  <CountUp enableScrollSpy start={1} delay={2} end={3} />
+                  <CountUp
+                    enableScrollSpy
+                    start={1}
+                    delay={2}
+                    end={courses?.length}
+                  />
                 </p>
                 <p className="text-sm text-white">New student Add </p>
               </div>
