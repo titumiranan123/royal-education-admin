@@ -88,11 +88,10 @@ const Users: React.FC = () => {
 
     if (result.isConfirmed) {
       try {
-        // Await the API call to ensure the response is properly handled
         const { data } = await api.delete(`/api/v1/users/${id}`);
 
         if (data.success) {
-          refetch(); // Assuming refetch is defined to refresh the data
+          refetch();
           Swal.fire({
             title: "Deleted!",
             text: "User has been deleted successfully",
@@ -115,6 +114,7 @@ const Users: React.FC = () => {
       }
     }
   };
+
   const makeAdmin = async (id: string) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -128,11 +128,10 @@ const Users: React.FC = () => {
 
     if (result.isConfirmed) {
       try {
-        // Await API call to update user role to Admin
         const { data } = await api.put(`/api/v1/users/${id}/make-admin`);
-        console.log(data);
+
         if (data.success) {
-          refetch(); // Assuming refetch refreshes the data
+          refetch();
           Swal.fire({
             title: "Success!",
             text: "User is now an Admin",
@@ -154,6 +153,7 @@ const Users: React.FC = () => {
       }
     }
   };
+
   const makeTeacher = async (id: string) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -167,11 +167,10 @@ const Users: React.FC = () => {
 
     if (result.isConfirmed) {
       try {
-        // Await API call to update user role to Teacher
         const { data } = await api.put(`/api/v1/users/${id}/make-teacher`);
 
         if (data.success) {
-          refetch(); // Assuming refetch refreshes the data
+          refetch();
           Swal.fire({
             title: "Success!",
             text: "User is now a Teacher",
@@ -196,6 +195,19 @@ const Users: React.FC = () => {
 
   return (
     <div className="mt-5 px-4 md:px-8 min-h-screen">
+      {/* Header Section */}
+      <div className="bg-[#272758] py-10 px-5 rounded-lg text-center mb-6">
+        <h1 className="text-3xl font-bold text-white">Manage Users</h1>
+        <p className="text-gray-300 mt-2">
+          Search and manage roles for all registered users.
+        </p>
+        <Link
+          to="/dashboard/add-user"
+          className="gradient-button rounded-xl font-semibold text-white mt-4 py-2 px-6 inline-block"
+        >
+          Add New User
+        </Link>
+      </div>
       {/* Search and Filter */}
       <div className="flex flex-wrap gap-5 items-center justify-between">
         <div className="bg p-[2px] rounded-lg flex-grow max-w-lg">
@@ -296,7 +308,7 @@ const Users: React.FC = () => {
                 )}
 
                 <Link
-                  to={`/user/${user.id}`}
+                  to={`/dashboard/update-user/${user.id}`}
                   className="gradient-button text-white py-2 px-3 md:px-5 font-semibold text-lg"
                 >
                   Update

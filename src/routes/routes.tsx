@@ -14,6 +14,8 @@ import CourseContent from "../page/admin/courseForm/CourseContent";
 import CourseExam from "../page/admin/courseForm/CourseExam";
 import Loginpage from "../page/loginpage/Loginpage";
 import Privateroute from "./Privateroute";
+import Adduser from "../page/adduser/Adduser";
+import UpdateUser from "../page/updateUser/updateUser";
 
 
 export const routes = createBrowserRouter([
@@ -53,6 +55,14 @@ export const routes = createBrowserRouter([
       {
         path: "user",
         element: <Users />,
+      },
+      {
+        path: "add-user",
+        element: <Adduser />,
+      },
+      {
+        path: "update-user/:id",
+        element: <UpdateUser />,
       },
       {
         path: "create-course",
