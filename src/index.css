@@ -386,3 +386,7 @@ mark:after {
 .flip-horizontal {
   transform: scaleX(-1);
 }
+.select-bg{
+  background: #272758 !important;
+  color: white !important;
+}

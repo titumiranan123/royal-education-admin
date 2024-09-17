@@ -4,9 +4,14 @@ import useCourse from "../../../hook/useCourse";
 
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import Loader from "../../../components/utils/Lodder";
 
 const Allcourse: React.FC = () => {
-  const { data: course } = useCourse();
+  const { data: course, isLoading } = useCourse();
+  console.log(isLoading)
+  if(isLoading){
+    return <Loader ></Loader>
+  }
 
   return (
     <div className="text-white min-h-screen max-w-[1240px] mx-auto">
@@ -30,10 +35,10 @@ const Allcourse: React.FC = () => {
             name=""
             id=""
           >
-            <option className="gradient-text bg-black" value="webdevelopment">
+            <option className="gradient-text select-bg" value="webdevelopment">
               Admission
             </option>
-            <option className="gradient-text" value="graphicdesign">
+            <option className="gradient-text select-bg" value="graphicdesign">
               Exam batch
             </option>
           </select>
