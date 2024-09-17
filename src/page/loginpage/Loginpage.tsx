@@ -4,10 +4,11 @@ import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
-import { login } from "../../redux/userSlice";
+import {  loginUser } from "../../redux/userSlice";
+import { AppDispatch } from "../../redux/Store";
 
 
 type Inputs = {
@@ -16,56 +17,52 @@ type Inputs = {
 };
 
 const Loginpage: React.FC = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
+   const dispatch: AppDispatch = useDispatch();
+  const from = location.state?.from?.pathname || "/dashboard";
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    try {
-      const response = await fetch(`https://test.royaleducation.online/api/v1/login`, {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const user = await response.json();
+ const onSubmit: SubmitHandler<Inputs> = async (data) => {
+   try {
+     const actionResult = await dispatch(
+       loginUser({ email: data.email, password: data.password })
+     );
 
-      if (user.success) {
-        dispatch(login(user.data));
-        navigate("/");
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Login success",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: user.message,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    } catch (error) {
-    
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "An error occurred",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
-  };
+     // Handle success or failure based on action result
+
+     if (loginUser.fulfilled.match(actionResult)) {
+       navigate(from,{replace:true});
+       Swal.fire({
+         position: "center",
+         icon: "success",
+         title: "Login successful",
+         showConfirmButton: false,
+         timer: 1500,
+       });
+     } else {
+       Swal.fire({
+         position: "center",
+         icon: "error",
+         title: "Login failed",
+         showConfirmButton: false,
+         timer: 1500,
+       });
+     }
+   } catch (error) {
+     Swal.fire({
+       position: "center",
+       icon: "error",
+       title: "An error occurred during login",
+       showConfirmButton: false,
+       timer: 1500,
+     });
+   }
+ };
 
   return (
     <div className="max-w-[1440px] min-h-screen mx-auto relative py-10">

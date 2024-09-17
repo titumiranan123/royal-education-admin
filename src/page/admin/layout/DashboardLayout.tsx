@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import {
   FaDatabase,
@@ -16,9 +18,47 @@ import {
 } from "react-icons/ri";
 import user from "../../../assets/testimonial/user.png";
 import { Link } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { decode } from "jwt-js-decode";
+import Cookies from "js-cookie";
+import { clearAuth, setAuth } from "../../../redux/userSlice";
 const DashboardLayout: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const [isOpen, setIsOpen] = useState(false);
+ const dispatch = useDispatch();
+ const isTokenExpired = (token: string) => {
+   try {
+     const decoded: any = decode(token); // Decode token
+     const currentTime = Date.now() / 1000; // Get current time in seconds
+     // Compare expiration time with current time
+     return decoded?.exp && decoded.exp < currentTime;
+   } catch (error) {
+     console.error("Error decoding token:", error);
+     return true; // If decoding fails, treat the token as expired
+   }
+ };
+ useEffect(() => {
+   const token = Cookies.get("accessToken");
+   
+   if (token && !isTokenExpired(token)) {
+     try {
+       const decoded = decode(token) as any; 
+       dispatch(setAuth({ user: decoded, accessToken: token }));
+     } catch (error) {
+       Cookies.remove("accessToken");
+       dispatch(clearAuth());
+     }
+   } else {
+     Cookies.remove("accessToken");
+     dispatch(clearAuth());
+   }
+ }, [dispatch]);
+
+
+
+
+
+
+
   return (
     <div className="grid min-h-screen  relative lg:grid-cols-5  grid-cols-1">
       <div className="lg:col-span-1 lg:block hidden">

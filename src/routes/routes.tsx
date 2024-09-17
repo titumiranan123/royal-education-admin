@@ -13,6 +13,7 @@ import Updatelayout from "../page/admin/Updatecourse/Updatelayout";
 import CourseContent from "../page/admin/courseForm/CourseContent";
 import CourseExam from "../page/admin/courseForm/CourseExam";
 import Loginpage from "../page/loginpage/Loginpage";
+import Privateroute from "./Privateroute";
 
 
 export const routes = createBrowserRouter([
@@ -26,7 +27,11 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: (
+      <Privateroute>
+        <DashboardLayout />
+      </Privateroute>
+    ),
     children: [
       {
         path: "",

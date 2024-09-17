@@ -1,17 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
+import api from "../redux/api/api";
 
 const useCourse = () => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["courses"],
     queryFn: async () => {
-      const response = await fetch("https://test.royaleducation.online/api/v1/course", {
-        method: "GET",
-      });
+      const response = await api.get("/api/v1/course")
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
+      return response.data;
     },
   });
   

@@ -1,137 +1,86 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { decode, verify } from "jwt-js-decode";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { decode } from "jwt-js-decode";
 import Cookies from "js-cookie";
+import api from "./api/api";
 
-// Define the state interface
+// Define User and Auth State interface
 interface AuthState {
-  user: any | null; // You can replace `any` with the actual user type if known
-  token: string | null;
+  user: any ;
   isAuthenticated: boolean;
-  isLoading: boolean;
+ isLoading: boolean;
   error: string | null;
 }
 
 // Define the initial state
 const initialState: AuthState = {
   user: null,
-  token: null,
   isAuthenticated: false,
-  isLoading: false,
+isLoading: true,
   error: null,
 };
 
+// Async thunk for login action
+export const loginUser = createAsyncThunk(
+  "auth/loginUser",
+  async (
+    credentials: { email: string; password: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      // Make API request
+      const response = await api.post("/api/v1/admin/login", credentials);
+      // Extract access token from response
+      const accessToken = response.data.data.token;
+      // Store access token in cookies
+      Cookies.set("accessToken", accessToken);
+      const decodedToken: any = decode(accessToken);
+      return { user: decodedToken.payload, accessToken };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Login failed");
+    }
+  }
+);
+
+// Create the slice for authentication
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<{ token: string }>) => {
-      verify(action.payload.token, initialState.token as string)
-        .then((res) => {
-          if (res === true) {
-            const jwt = decode(action.payload.token);
-            state.token = action.payload.token;
-            state.user = jwt.payload;
-            state.isAuthenticated = true;
-
-            Cookies.set("token", state.token);
-          } else {
-            state.error = "Token verification failed";
-          }
-        })
-        .catch((error) => {
-          state.error = error.message || "Token verification failed";
-        });
-    },
     logout: (state) => {
-      state.token = null;
       state.user = null;
       state.isAuthenticated = false;
-
-      Cookies.remove("token");
+      Cookies.remove("accessToken");
     },
-    setUser: (state, action: PayloadAction<any>) => {
-      state.user = action.payload;
+    setAuth(state, action: PayloadAction<{ user: any; accessToken: string }>) {
+      const { user, accessToken } = action.payload;
+      state.user = user.payload;
+      state.isLoading = false;
+      state.isAuthenticated = true;
+      Cookies.set("accessToken", accessToken);
     },
-    refreshToken: async (state) => {
-      const accessToken = state.token;
-      if (!accessToken) {
-        state.error = "No access token available";
-        return;
-      }
-
-      const decodedToken = decode(state.token as string);
-      const currentTime = Date.now() / 1000;
-
-      if (decodedToken.exp < currentTime) {
-        state.isAuthenticated = false;
-        state.error = "Token has expired, logging out.";
-        state.token = null;
-        state.user = null;
-        Cookies.remove("token");
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          "https://test.royaleducation.online/api/v1/refreshtoken",
-          {
-            method: "GET",
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          state.token = data.token;
-          Cookies.set("token", state.token as string);
-        } else {
-          state.error = data.message || "Token refresh failed";
-          state.isAuthenticated = false;
-        }
-      } catch (error: any) {
-        state.error = error.response
-          ? error.response.data
-          : "Token refresh failed";
-        state.isAuthenticated = false;
-      }
+    clearAuth: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      Cookies.remove("accessToken");
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      });
+  },
 });
-
-export const { login, logout, setUser, refreshToken } = authSlice.actions;
-
+export const { logout, clearAuth, setAuth } = authSlice.actions;
 export default authSlice.reducer;
-
-// Middleware to check token validity and refresh if necessary
-// export const authMiddleware =
-//   (store: any) => (next: any) => async (action: any) => {
-//     const state = store.getState();
-//     const { token } = state.auth;
-
-//     if (token) {
-//       try {
-//         const response = await fetch(
-//           "https://test.royaleducation.online/api/v1/refreshtoken",
-//           {
-//             method: "POST",
-//             headers: {
-//               authorization: `Bearer ${token}`,
-//             },
-//           }
-//         );
-//         const data = await response.json();
-
-//         if (data.data && data.data.accessToken) {
-//           store.dispatch(setToken(data.data.accessToken));
-//         } else {
-//           store.dispatch(logout());
-//         }
-//       } catch (error) {
-//         store.dispatch(logout());
-//       }
-//     }
-
-//     return next(action);
-//   };
