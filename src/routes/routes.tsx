@@ -16,6 +16,7 @@ import Loginpage from "../page/loginpage/Loginpage";
 import Privateroute from "./Privateroute";
 import Adduser from "../page/adduser/Adduser";
 import UpdateUser from "../page/updateUser/updateUser";
+import Mannagement from "../page/Mannagement/Mannagement";
 
 
 export const routes = createBrowserRouter([
@@ -67,6 +68,10 @@ export const routes = createBrowserRouter([
       {
         path: "create-course",
         element: <Createcourse />,
+      },
+      {
+        path: "mannage-team",
+        element: <Mannagement />,
       },
       {
         path: "course",

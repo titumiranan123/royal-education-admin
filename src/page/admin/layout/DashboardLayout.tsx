@@ -204,12 +204,12 @@ const [isOpen, setIsOpen] = useState(false);
                 <div className="flex flex-col gap-2">
                   <Link
                     to={"/dashboard/mannage-team"}
-                    className={`flex items-center ms-4 px-14 py-2 cursor-pointer ${
+                    className={`flex items-center  ms-4 px-14 py-2 cursor-pointer ${
                       location.pathname === "/dashboard/mannage-team" && "bg"
                     }`}
                   >
                     <FaUsers className="text-xl text-white" />
-                    <Link to={"/"}>
+                    <Link to={"/dashboard/mannage-team"}>
                       <span className="ms-3 montserrat font-semibold text-white ">
                         Manage Team
                       </span>
@@ -388,7 +388,7 @@ const dispatch = useDispatch()
                 }`}
               >
                 <FaUsers className="text-xl text-white" />
-                <Link to={"/"}>
+                <Link to={"/dashboard/mannage-team"}>
                   <span className="ms-3 montserrat font-semibold text-white ">
                     Manage Team
                   </span>
@@ -412,10 +412,11 @@ const dispatch = useDispatch()
           <div className="flex justify-center items-center mt-14">
             <div className="p-[1px] w-[207px] rounded-lg bg">
               <button
-              onClick={()=>{
-dispatch(logout())
-              }}
-              className="flex  items-center p-2  w-[200px]  bg-black justify-center rounded-lg ">
+                onClick={() => {
+                  dispatch(logout());
+                }}
+                className="flex  items-center p-2  w-[200px]  bg-black justify-center rounded-lg "
+              >
                 <RiLogoutBoxLine className="w-5   h-5 text-white  transition duration-75 " />
                 <span className="ms-1 gradient-text montserrat font-bold text-white">
                   Sign Out
