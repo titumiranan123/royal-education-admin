@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import Swal from "sweetalert2";
+import api from "../../../redux/api/api";
 
 const QuizForm = ({ isVisible, onClose, examId }:any) => {
   const [question_text, setQuestion] = useState("");
@@ -21,23 +23,19 @@ const QuizForm = ({ isVisible, onClose, examId }:any) => {
       answer,
       exam_id: examId,
     };
-    fetch(`https://test.royaleducation.online/api/v1/insert-mcq`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((res) => res.json())
-      .then((info: any) => {
-        console.log(info, "from mcq");
-        // refetch();
-        Swal.fire("Exam Created!", "", "success");
+    api.post("/api/v1/insert-mcq", data)
+      .then((_response) => {
+    
+        Swal.fire("Mcq  upload!", "", "success");
+      })
+      .catch((_error) => {
+        Swal.fire(`Failed to mcq upload`, "", "error");
       });
+    
     setQuestion("");
     setOptions(["", "", "", "", ""]);
     setAnswer("");
-    Swal.fire("mcq inseted!", "", "success");
+ 
   };
 
   return (

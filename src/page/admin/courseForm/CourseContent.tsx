@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
@@ -7,6 +8,7 @@ import useCourse from "../../../hook/useCourse";
 import { Course } from "../Interface/Courseinterface";
 import CourseContentcard from "./CourseContentcard";
 import CoursesExam from "./CoursesExam";
+import api from "../../../redux/api/api";
 
 const CourseContent: React.FC = () => {
     const { id: courseId } = useParams();
@@ -111,6 +113,7 @@ const CourseContent: React.FC = () => {
                 return section;
             });
             setCourseContentData(updatedContentData);
+            console.log(updatedContentData)
             // Reset form fields after update
             resetModalFields();
 
@@ -160,11 +163,19 @@ const CourseContent: React.FC = () => {
                     return section;
                 });
                 setCourseContentData(updatedContentData);
+                refetch()
                 Swal.fire(
                     'Deleted!',
                     'Your video has been deleted.',
                     'success'
                 );
+            }
+            else{
+                 Swal.fire(
+                   "Cancel Delete!",
+                   "",
+                   "error"
+                 );
             }
         });
     };
@@ -213,97 +224,108 @@ const CourseContent: React.FC = () => {
     };
     const upLoadVideo = (id: any) => {
         Swal.fire({
-            title: 'Update/Upload Video',
-            html: `
-        <div class="swal2-content">
+          title: "Update/Upload Video",
+          html: `
+        <div class="swal2-content ">
           <div class="mb-4">
-            <label for="videoTitle" class="block text-gray-700 montserrat text-[18px] font-semibold">Video Title</label>
+            <label for="videoTitle" class="block text-white montserrat text-[18px] font-semibold">Video Title</label>
             <input
               id="videoTitle"
               type="text"
               placeholder="Video Title"
-              class="py-2 px-2 border border-gray-300 rounded-lg w-full"
+              class="py-2 px-2 border border-gray-300 rounded-lg w-full text-gray-700"
             />
           </div>
           <div class="mb-4">
-            <label for="videoLink" class="block text-gray-700 montserrat text-[18px] font-semibold">Video Link</label>
+            <label for="videoLink" class="block text-white montserrat text-[18px] font-semibold">Video Link</label>
             <input
               id="videoLink"
               type="text"
           
               placeholder="Video Link"
-              class="py-2 px-2 border border-gray-300 rounded-lg w-full"
+              class="py-2 px-2 border border-gray-300 rounded-lg w-full text-gray-700"
             />
           </div>
           <div class="mb-4">
-            <label for="videoDuration" class="block text-gray-700 montserrat text-[18px] font-semibold">Video Duration</label>
+            <label for="videoDuration" class="block text-white montserrat text-[18px] font-semibold">Video Duration</label>
             <input
               id="videoDuration"
               type="text"
     
               placeholder="Video Duration (minutes)"
-              class="py-2 px-2 border border-gray-300 rounded-lg w-full"
+              class="py-2 px-2 border border-gray-300 rounded-lg w-full text-gray-700"
             />
           </div>
           <div class="mb-4">
-            <label for="pdfTitle" class="block text-gray-700 montserrat text-[18px] font-semibold">PDF Title</label>
+            <label for="pdfTitle" class="block text-white montserrat text-[18px] font-semibold">PDF Title</label>
             <input
               id="pdfTitle"
               type="text"
           
               placeholder="PDF Title"
-              class="py-2 px-2 border border-gray-300 rounded-lg w-full"
+              class="py-2 px-2 border text-gray-700 border-gray-300 rounded-lg w-full"
             />
           </div>
           <div class="mb-4">
-            <label for="pdfLink" class="block text-gray-700 montserrat text-[18px] font-semibold">PDF Link</label>
+            <label for="pdfLink" class="block text-white montserrat text-[18px] font-semibold">PDF Link</label>
             <input
               id="pdfLink"
               type="text"
           
               placeholder="PDF Link"
-              class="py-2 px-2 border border-gray-300 rounded-lg w-full"
+              class="py-2 px-2 border text-gray-700 border-gray-300 rounded-lg w-full"
             />
           </div>
         </div>
       `,
-            showCancelButton: true,
-            confirmButtonText: 'Upload',
-            cancelButtonText: 'Cancel',
-            preConfirm: () => {
-                const videoTitle = (document.getElementById('videoTitle') as HTMLInputElement).value;
-                const videoLink = (document.getElementById('videoLink') as HTMLInputElement).value;
-                const videoDuration = (document.getElementById('videoDuration') as HTMLInputElement).value;
-                const pdfTitle = (document.getElementById('pdfTitle') as HTMLInputElement).value;
-                const pdfLink = (document.getElementById('pdfLink') as HTMLInputElement).value;
-                const data = {
-                    subject_id: id,
-                    video_title: videoTitle,
-                    video_link: videoLink,
-                    video_duration: videoDuration,
-                    pdf_title: pdfTitle,
-                    pdf_link: pdfLink
-                }
-                fetch(`https://test.royaleducation.online/api/v1/course-content`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                }).then((res) => res.json())
-                    .then((info: any) => {
-                        console.log(info)
-                        refetch()
-                        Swal.fire('Exam Created!', '', 'success');
-                    })
-                setVideoTitle(videoTitle);
-                setVideoLink(videoLink);
-                setVideoDuration(videoDuration);
-                setPdfTitle(pdfTitle);
-                setPdfLink(pdfLink);
+          showCancelButton: true,
+          confirmButtonText: "Upload",
+          cancelButtonText: "Cancel",
+          preConfirm: () => {
+            const videoTitle = (
+              document.getElementById("videoTitle") as HTMLInputElement
+            ).value;
+            const videoLink = (
+              document.getElementById("videoLink") as HTMLInputElement
+            ).value;
+            const videoDuration = (
+              document.getElementById("videoDuration") as HTMLInputElement
+            ).value;
+            const pdfTitle = (
+              document.getElementById("pdfTitle") as HTMLInputElement
+            ).value;
+            const pdfLink = (
+              document.getElementById("pdfLink") as HTMLInputElement
+            ).value;
+            const info = {
+              subject_id: id,
+              video_title: videoTitle,
+              video_link: videoLink,
+              video_duration: videoDuration,
+              pdf_title: pdfTitle,
+              pdf_link: pdfLink,
+            };
 
-                handleVideoUpdate();
-            }
+             api.post("/api/v1/course-content", info)
+               .then((_response) => {
+
+                  refetch();
+                  Swal.fire("Video  upload!", "", "success");
+              
+               })
+               .catch((_error) => {
+                 Swal.fire(`Failed to Video upload`, "", "error");
+               });
+      
+          
+            setVideoTitle(videoTitle);
+            setVideoLink(videoLink);
+            setVideoDuration(videoDuration);
+            setPdfTitle(pdfTitle);
+            setPdfLink(pdfLink);
+
+            handleVideoUpdate();
+          },
         });
         console.log(id)
     }

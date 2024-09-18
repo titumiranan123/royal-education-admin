@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import useCourse from '../../../hook/useCourse';
@@ -6,6 +7,7 @@ import { AiOutlineDelete, AiOutlineEdit, AiOutlineMinusCircle, AiOutlinePlusCirc
 import Swal from 'sweetalert2';
 import { MdOutlinePublishedWithChanges, MdOutlineUnpublished } from 'react-icons/md';
 import QuizForm from '../utils/Quize';
+import api from '../../../redux/api/api';
 
 interface Exam {
     id: string;
@@ -96,18 +98,20 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                     exam_type: examType,
                     publish: false
                 }
-                fetch(`https://test.royaleducation.online/api/v1/create-exam`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                }).then((res) => res.json())
-                    .then((info: any) => {
-                        console.log(info , "from exam")
-                        refetch()
-                        Swal.fire('Exam Created!', '', 'success');
-                    })
+                api.post("/api/v1/create-exam", data)
+                .then((_response) => {
+              
+                    refetch();
+                    Swal.fire("Exam Created !", "", "success");
+                  
+                })
+                .catch((_error)=>{
+    
+                    refetch();
+                    Swal.fire("Exam Create Failed!", "", "error");
+                })
+                
+                   
             }
         });
     };
@@ -163,7 +167,6 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
         });
     };
     const closeModal = () => setOpen(!open)
-    console.log(examid);
     return (
         <div className="p-4">
             <h2 className="text-xl font-bold text-white mb-4">Course Exam</h2>

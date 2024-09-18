@@ -396,3 +396,9 @@ mark:after {
 .swal2-title{
   color: white !important;
 }
+.text-gray-700{
+  color: black !important;
+}
+.text-white{
+  color: rgb(255, 255, 255) !important;
+}

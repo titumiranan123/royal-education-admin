@@ -3,15 +3,12 @@ import DashboardLayout from "../page/admin/layout/DashboardLayout";
 import Dashboard from "../page/admin/Dashborad/Dashboard";
 import Invoice from "../page/admin/Invoice/Invoice";
 import Users from "../page/admin/user/User";
-
 import Createcourse from "../page/admin/courseForm/Createcourse";
-
 import Allcourse from "../page/admin/Allcourse/Allcourse";
 import Updatecourse from "../page/admin/Updatecourse/Updatecourse";
 import MCQstore from "../page/admin/mcq/MCQstore";
 import Updatelayout from "../page/admin/Updatecourse/Updatelayout";
 import CourseContent from "../page/admin/courseForm/CourseContent";
-import CourseExam from "../page/admin/courseForm/CourseExam";
 import Loginpage from "../page/loginpage/Loginpage";
 import Privateroute from "./Privateroute";
 import Adduser from "../page/adduser/Adduser";
@@ -84,11 +81,8 @@ export const routes = createBrowserRouter([
           {
             path: "video-upload/:id",
             element: <CourseContent />,
-          },
-          {
-            path: "exam/:id",
-            element: <CourseExam />,
-          },
+          }
+          
         ],
       },
     ],
