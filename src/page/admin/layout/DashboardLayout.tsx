@@ -262,12 +262,13 @@ const [isOpen, setIsOpen] = useState(false);
 const Sidebar: React.FC = () => {
   const location = useLocation();
  const {user} = useSelector((state: RootState) => state.user);
+ console.log(user.photoUrl)
 const dispatch = useDispatch()
   return (
     <div className="w-full sticky top-0 left-0  bg-gradient-to-tr min-h-screen from-[#DC02CE] to-[#5C53FE] pe-[2px]">
       <div className={`relative `}>
         <div className="bg-black p-10">
-          <img className="w-20 mx-auto h-20" src={user?.photoUrl} alt="" />
+          <img className="w-20 mx-auto h-20 rounded-full" src={user?.photoUrl} alt={`photo`} />
           <p className="text-center text-white mt-5 montserrat font-semibold">
             <span className="text-[20px]"> {user?.name} </span>{" "}
             <span className="ms-1 text-[14px]">({user?.role})</span>

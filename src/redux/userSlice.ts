@@ -33,7 +33,7 @@ export const loginUser = createAsyncThunk(
       // Extract access token from response
       const accessToken = response.data.data.token;
       // Store access token in cookies
-      Cookies.set("accessToken", accessToken);
+      Cookies.set("accessTokenadmin", accessToken);
       const decodedToken: any = decode(accessToken);
       return { user: decodedToken.payload, accessToken };
     } catch (error: any) {
@@ -50,7 +50,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      Cookies.remove("accessToken");
+      Cookies.remove("accessTokenadmin");
       window.location.href='/'
     },
     setAuth(state, action: PayloadAction<{ user: any; accessToken: string }>) {
@@ -58,12 +58,12 @@ const authSlice = createSlice({
       state.user = user.payload;
       state.isLoading = false;
       state.isAuthenticated = true;
-      Cookies.set("accessToken", accessToken);
+      Cookies.set("accessTokenadmin", accessToken);
     },
     clearAuth: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      Cookies.remove("accessToken");
+      Cookies.remove("accessTokenadmin");
     },
   },
   extraReducers: (builder) => {
