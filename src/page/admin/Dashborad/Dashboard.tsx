@@ -9,6 +9,8 @@ import useUser from "../../../hook/useUser";
 const Dashboard: React.FC = () => {
   const { data: courses } = useCourse();
   const {data:users} = useUser()
+
+  
   return (
     <div className="">
       <div className="bg p-[2px] md:w-[279px] w-[224px] -mt-8 rounded-lg">
@@ -34,9 +36,14 @@ const Dashboard: React.FC = () => {
                   TOTAL STUDENT
                 </h1>
                 <p className="text-[30px] font-bold text-white">
-                  <CountUp start={1} enableScrollSpy delay={2} end={users?.length} />
+                  <CountUp
+                    start={1}
+                    enableScrollSpy
+                    delay={2}
+                    end={users?.data?.length}
+                  />
                 </p>
-                <p className="text-sm text-white">New student Add </p>
+                {/* <p className="text-sm text-white">New student Add </p> */}
               </div>
             </div>
           </div>
@@ -64,7 +71,7 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="flex flex-col gap-1 ">
                 <h1 className="text-[20px] font-semibold text-white">
-                  TOTAL Course
+                  TOTAL COURSE
                 </h1>
                 <p className="text-[30px] font-bold text-white">
                   <CountUp
@@ -74,7 +81,7 @@ const Dashboard: React.FC = () => {
                     end={courses?.length}
                   />
                 </p>
-                <p className="text-sm text-white">New student Add </p>
+                {/* <p className="text-sm text-white">New student Add </p> */}
               </div>
             </div>
           </div>

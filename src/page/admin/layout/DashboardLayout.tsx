@@ -5,8 +5,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import {
   FaDatabase,
   FaFileInvoice,
-  FaFileVideo,
-  FaStore,
   FaUser,
   FaUsers,
 } from "react-icons/fa";
@@ -141,7 +139,7 @@ const [isOpen, setIsOpen] = useState(false);
                       Users
                     </span>
                   </Link>
-                  <Link
+                  {/* <Link
                     to={"/dashboard/mcq-store"}
                     className={`flex items-center ms-4 px-14 py-2 ${
                       location.pathname === "/dashboard/user" && "bg"
@@ -151,7 +149,7 @@ const [isOpen, setIsOpen] = useState(false);
                     <span className="ms-3 text-white montserrat font-semibold">
                       MCQ store
                     </span>
-                  </Link>
+                  </Link> */}
                   <Link
                     to="/dashboard/invoice"
                     className={`flex items-center ms-4 px-14 py-2 cursor-pointer ${
@@ -183,7 +181,7 @@ const [isOpen, setIsOpen] = useState(false);
                       Create Course
                     </span>
                   </Link>
-                  <Link
+                  {/* <Link
                     to={"/dashboard/live-course"}
                     className={`flex items-center ms-4 px-14 py-2 cursor-pointer ${
                       location.pathname === "/dashboard/live-course" && "bg"
@@ -193,7 +191,7 @@ const [isOpen, setIsOpen] = useState(false);
                     <span className="ms-3 text-white montserrat font-semibold">
                       Live Course
                     </span>
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
               <div className="">
@@ -209,11 +207,11 @@ const [isOpen, setIsOpen] = useState(false);
                     }`}
                   >
                     <FaUsers className="text-xl text-white" />
-                    <Link to={"/dashboard/mannage-team"}>
+                  
                       <span className="ms-3 montserrat font-semibold text-white ">
                         Manage Team
                       </span>
-                    </Link>
+                  
                   </Link>
                 </div>
               </div>
@@ -309,7 +307,7 @@ const dispatch = useDispatch()
                   All Course
                 </span>
               </Link>
-              <Link
+              {/* <Link
                 to={"/dashboard/mcq-store"}
                 className={`flex items-center ms-4 px-14 py-2 ${
                   location.pathname === "/dashboard/mcq-store" && "bg"
@@ -319,7 +317,7 @@ const dispatch = useDispatch()
                 <span className="ms-3 text-white montserrat font-semibold">
                   MCQ store
                 </span>
-              </Link>
+              </Link> */}
               <Link
                 to={"/dashboard/user"}
                 className={`flex items-center ms-4 px-14 py-2 ${
@@ -362,7 +360,7 @@ const dispatch = useDispatch()
                   Create Course
                 </span>
               </Link>
-              <Link
+              {/* <Link
                 to={"/dashboard/live-course"}
                 className={`flex items-center ms-4 px-14 py-2 cursor-pointer ${
                   location.pathname === "/dashboard/live-course" && "bg"
@@ -372,7 +370,7 @@ const dispatch = useDispatch()
                 <span className="ms-3 text-white montserrat font-semibold">
                   Live Course
                 </span>
-              </Link>
+              </Link> */}
             </div>
           </div>
           <div className="">
@@ -388,11 +386,11 @@ const dispatch = useDispatch()
                 }`}
               >
                 <FaUsers className="text-xl text-white" />
-                <Link to={"/dashboard/mannage-team"}>
+           
                   <span className="ms-3 montserrat font-semibold text-white ">
                     Manage Team
                   </span>
-                </Link>
+              
               </Link>
             </div>
           </div>
