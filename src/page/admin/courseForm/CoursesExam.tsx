@@ -100,10 +100,8 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                 }
                 api.post("/api/v1/create-exam", data)
                 .then((_response) => {
-              
                     refetch();
                     Swal.fire("Exam Created !", "", "success");
-                  
                 })
                 .catch((_error)=>{
     

@@ -109,7 +109,7 @@ const Updatecourse: React.FC = () => {
   };
 
   return (
-    <div className="w-full mt-10 flex flex-col-reverse lg:flex-col  max-w-[1240px] mx-auto">
+    <div className="w-full mt-5 flex flex-col-reverse lg:flex-col  max-w-[1240px] mx-auto">
       <div className="flex justify-between items-center pe-10">
         <h1 className="montserrat font-semibold text-white text-[20px]">
           Update Your Course
@@ -121,12 +121,7 @@ const Updatecourse: React.FC = () => {
           >
             <FaPlus /> Add Lecture
           </Link>
-          <Link
-            to={`/dashboard/course/exam/${id}`}
-            className="bg montserrat font-semibold text-white py-2 px-3 flex justify-center items-center gap-2 rounded-xl w-[180]"
-          >
-            <FaPlus /> Add Exam
-          </Link>
+          
         </div>
       </div>
       <div className="lg:w-[70%] w-full">

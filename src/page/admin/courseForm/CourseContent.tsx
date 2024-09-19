@@ -255,12 +255,6 @@ const handleDeleteSection = (index: number) => {
        }
      });
    };
-
-
-   
-
-
-
     const toggleSection = (index: number) => {
         const updatedContentData = courseContentData.map((section, i) => {
             if (i === index) {

@@ -13,7 +13,7 @@ const PermissionDropdown: React.FC<{
   onClose: () => void;
   onMakeAdmin: () => void;
   onMakeTeacher: () => void;
-}> = ({ isOpen, onClose, onMakeAdmin, onMakeTeacher }) => {
+}> = ({ isOpen, onClose, onMakeAdmin }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close the dropdown if clicked outside
@@ -49,12 +49,12 @@ const PermissionDropdown: React.FC<{
       >
         Make Admin
       </button>
-      <button
+      {/* <button
         className="block w-full text-left px-4 py-2 text-black hover:bg-gray-200"
         onClick={onMakeTeacher}
       >
         Make Teacher
-      </button>
+      </button> */}
     </div>
   ) : null;
 };
