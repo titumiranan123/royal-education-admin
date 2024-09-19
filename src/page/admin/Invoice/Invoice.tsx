@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import useInvoice from "../../../hook/useInvoice";
 import Swal from "sweetalert2";
+import api from "../../../redux/api/api";
 
 const Invoice: React.FC = () => {
   const { data: invoice, refetch } = useInvoice();
@@ -20,19 +22,8 @@ const Invoice: React.FC = () => {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(
-          `http://localhost:3000/api/v1/enrollments/${id}/approve`,
-          {
-            method: "PUT",
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-
-        const data: any = await res.json();
-        if (data.success) {
+        const res = await api.put(`/api/v1/enrollments/${id}/approve`);
+        if (res.data.success) {
           refetch();
           Swal.fire({
             title: "Approved!",
@@ -46,8 +37,7 @@ const Invoice: React.FC = () => {
             icon: "error",
           });
         }
-      } catch (error) {
-        console.error("Error approving:", error);
+      } catch (_error) {
         Swal.fire({
           title: "Error!",
           text: "Failed to approve",

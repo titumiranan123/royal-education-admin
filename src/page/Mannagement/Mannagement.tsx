@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 
@@ -111,11 +112,9 @@ const Mannagement: React.FC = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     });
-
     if (result.isConfirmed) {
       try {
         const { data } = await api.delete(`/api/v1/users/${id}`);
-
         if (data.success) {
           refetch();
           Swal.fire({
@@ -130,8 +129,8 @@ const Mannagement: React.FC = () => {
             icon: "error",
           });
         }
-      } catch (error) {
-        console.error("Error deleting user:", error);
+      } catch (_error) {
+      
         Swal.fire({
           title: "Error!",
           text: "Failed to delete user",
