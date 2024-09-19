@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Popup from "./Popup";
 
-interface MCQstoreProps {}
 
-const MCQstore: React.FC<MCQstoreProps> = () => {
+
+const MCQstore: React.FC = () => {
   const [titles, setTitles] = useState<string[]>([]);
   const [subjects, setSubjects] = useState<string[]>([]);
   const [showTitlePopup, setShowTitlePopup] = useState<boolean>(false);

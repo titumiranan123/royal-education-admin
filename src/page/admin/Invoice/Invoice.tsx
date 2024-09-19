@@ -65,7 +65,7 @@ const Invoice: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen mt-24 px-4">
+    <div className="min-h-screen  px-4">
       <div className="max-w-7xl mx-auto">
         {/* Page Heading */}
         <div className="text-center mb-12">

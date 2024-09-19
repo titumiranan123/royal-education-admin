@@ -6,7 +6,6 @@ import Users from "../page/admin/user/User";
 import Createcourse from "../page/admin/courseForm/Createcourse";
 import Allcourse from "../page/admin/Allcourse/Allcourse";
 import Updatecourse from "../page/admin/Updatecourse/Updatecourse";
-import MCQstore from "../page/admin/mcq/MCQstore";
 import Updatelayout from "../page/admin/Updatecourse/Updatelayout";
 import CourseContent from "../page/admin/courseForm/CourseContent";
 import Loginpage from "../page/loginpage/Loginpage";
@@ -42,10 +41,7 @@ export const routes = createBrowserRouter([
         path: "all-course",
         element: <Allcourse />,
       },
-      {
-        path: "mcq-store",
-        element: <MCQstore />,
-      },
+      
       {
         path: "invoice",
         element: <Invoice />,

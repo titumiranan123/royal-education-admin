@@ -25,7 +25,7 @@ const Mannagement: React.FC = () => {
   );
 
   return (
-    <div className="mt-5 px-4 md:px-8 min-h-screen">
+    <div className="mt-2 px-4 md:px-8 min-h-screen">
       {/* Header Section */}
       <div className="bg-[#272758] py-10 px-5 rounded-lg text-center mb-6">
         <h1 className="text-3xl font-bold text-white">Manage Admins</h1>
