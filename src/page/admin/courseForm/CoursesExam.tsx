@@ -110,14 +110,13 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                     refetch();
                     Swal.fire("Exam Create Failed!", "", "error");
                 })
-                
-                   
             }
         });
     };
 
     const handleUpdateExam = (sectionIndex: number, examIndex: number) => {
         const exam = courseContentData[sectionIndex].exam[examIndex];
+        console.log(exam)
         Swal.fire({
             title: 'Update Exam',
             html:
@@ -136,15 +135,25 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                 const examName = (document.getElementById('examName') as HTMLInputElement).value;
                 const examTime = (document.getElementById('examTime') as HTMLInputElement).value;
                 const examType = (document.getElementById('examType') as HTMLSelectElement).value;
-                const updatedContentData = [...courseContentData];
-                updatedContentData[sectionIndex].exam[examIndex] = {
-                    ...updatedContentData[sectionIndex].exam[examIndex],
-                    exam_name: examName,
-                    time: examTime,
-                    exam_type: examType,
+                const data = {
+                  subject_id: exam.subject_id,
+                  exam_name: examName,
+                  time: examTime,
+                  exam_type: examType,
+                  publish: false,
                 };
-                setCourseContentData(updatedContentData);
-                Swal.fire('Exam Updated!', '', 'success');
+
+                 api
+                   .put(`/api/v1/exam-update/${exam.id}`, data)
+                   .then((_response) => {
+                     refetch();
+          
+                     Swal.fire("Exam Updated!", "", "success");
+                   })
+                   .catch((_error) => {
+                     Swal.fire("Exam Update Failed!", "", "error");
+                   });
+                
             }
         });
     };
@@ -166,85 +175,152 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
             }
         });
     };
+     const handleDeleteVideo = (
+       examid: string
+     ) => {
+       Swal.fire({
+         title: "Are you sure?",
+         text: "You won't be able to revert this!",
+         icon: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#3085d6",
+         cancelButtonColor: "#d33",
+         confirmButtonText: "Yes, delete it!",
+       }).then((result) => {
+         if (result.isConfirmed) {
+           // Call the delete API
+           api
+             .delete(`/api/v1/exam-delete/${examid}`)
+             .then((response) => {
+               console.log(response);
+               refetch(); // Optionally refetch any related data if necessary
+               Swal.fire("Deleted!", "Your exam has been deleted.", "success");
+             })
+
+             .catch((error) => {
+               Swal.fire("Error!", "Failed to delete exam.", "error");
+               console.error("Delete error:", error);
+             });
+         } else {
+           Swal.fire("Cancel Delete!", "", "error");
+         }
+       });
+     };
     const closeModal = () => setOpen(!open)
     return (
-        <div className="p-4">
-            <h2 className="text-xl font-bold text-white mb-4">Course Exam</h2>
-            {courseContentData.map((section, sectionIndex) => (
-                <div key={sectionIndex} className="mb-4 bg-gray-900 rounded-lg shadow-md">
-                    <div className="flex justify-between items-center px-4 py-2">
-                        <div className="flex items-center cursor-pointer text-purple-500 hover:text-purple-700"
-                            onClick={() => toggleSection(sectionIndex)}>
-                            {section.isExpanded ? (
-                                <AiOutlineMinusCircle className="mr-2 text-2xl" />
-                            ) : (
-                                <AiOutlinePlusCircle className="mr-2 text-2xl" />
-                            )}
-                            <h3 className="text-lg font-semibold">{section.subject_name}</h3>
-                        </div>
-                        <div className="flex space-x-2">
-                            <button className="text-purple-500 hover:text-purple-700"
-                                onClick={() => console.log("Update clicked")}>
-                                <AiOutlineEdit size={20} />
-                            </button>
-                            <button className="text-red-500 hover:text-red-700"
-                                onClick={() => console.log("Delete clicked")}>
-                                <AiOutlineDelete size={20} />
-                            </button>
-                        </div>
+      <div className="p-4">
+        <h2 className="text-xl font-bold text-white mb-4">Course Exam</h2>
+        {courseContentData.map((section, sectionIndex) => (
+          <div
+            key={sectionIndex}
+            className="mb-4 bg-gray-900 rounded-lg shadow-md"
+          >
+            <div className="flex justify-between items-center px-4 py-2">
+              <div
+                className="flex items-center cursor-pointer text-purple-500 hover:text-purple-700"
+                onClick={() => toggleSection(sectionIndex)}
+              >
+                {section.isExpanded ? (
+                  <AiOutlineMinusCircle className="mr-2 text-2xl" />
+                ) : (
+                  <AiOutlinePlusCircle className="mr-2 text-2xl" />
+                )}
+                <h3 className="text-lg font-semibold">
+                  {section.subject_name}
+                </h3>
+              </div>
+              <div className="flex space-x-2">
+                <button
+                  className="text-purple-500 hover:text-purple-700"
+                  onClick={() => console.log("Update clicked")}
+                >
+                  <AiOutlineEdit size={20} />
+                </button>
+                <button
+                  className="text-red-500 hover:text-red-700"
+                  onClick={() => console.log("Delete clicked")}
+                >
+                  <AiOutlineDelete size={20} />
+                </button>
+              </div>
+            </div>
+            {section.isExpanded && (
+              <div className="px-4 py-2">
+                {section.exam.length > 0 &&
+                  section.exam.map((exam, examIndex) => (
+                    <div
+                      key={examIndex}
+                      className="mb-2 flex justify-between items-center bg-gray-800 p-2 rounded-lg"
+                    >
+                      <div>
+                        <h4 className="text-md font-semibold text-white">
+                          {exam.exam_name}
+                        </h4>
+                        <p className="text-gray-400">Type: {exam.exam_type}</p>
+                        <p className="text-gray-400">Time: {exam.time}</p>
+                      </div>
+                      <div className="flex space-x-2">
+                        {exam.exam_type !== "written" ? (
+                          <button
+                            onClick={() => {
+                              setExamId("");
+                              setOpen(!open);
+                              setExamId(exam.id);
+                            }}
+                            className="text-yellow-500 hover:text-yellow-700"
+                          >
+                            Mcq Upload
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleUploadQuestion(sectionIndex)}
+                            className="text-yellow-500 hover:text-yellow-700"
+                          >
+                            Questions Upload
+                          </button>
+                        )}
+                        {exam.publish ? (
+                          <button className="text-yellow-500 hover:text-yellow-700">
+                            <MdOutlineUnpublished size={20} />
+                          </button>
+                        ) : (
+                          <button className="text-slate-600 pointer-events-none">
+                            <MdOutlinePublishedWithChanges size={20} />
+                          </button>
+                        )}
+                        <button
+                          onClick={() =>
+                            handleUpdateExam(sectionIndex, examIndex)
+                          }
+                          className="text-yellow-500 hover:text-yellow-700"
+                        >
+                          <AiOutlineEdit size={20} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteVideo(exam.id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <AiOutlineDelete size={20} />
+                        </button>
+                      </div>
                     </div>
-                    {section.isExpanded && (
-                        <div className="px-4 py-2">
-                            {section.exam.length > 0 && section.exam.map((exam, examIndex) => (
-                                <div key={examIndex} className="mb-2 flex justify-between items-center bg-gray-800 p-2 rounded-lg">
-                                    <div>
-                                        <h4 className="text-md font-semibold text-white">{exam.exam_name}</h4>
-                                        <p className="text-gray-400">Type: {exam.exam_type}</p>
-                                        <p className="text-gray-400">Time: {exam.time}</p>
-                                    </div>
-                                    <div className="flex space-x-2">
-                                        {exam.exam_type !== 'written' ?
-                                            <button onClick={() => {
-                                                setExamId('')
-                                                setOpen(!open)
-                                                setExamId(exam.id);
-                                                }} className="text-yellow-500 hover:text-yellow-700">
-                                                Mcq Upload
-                                            </button> : <button onClick={() => handleUploadQuestion(sectionIndex)} className="text-yellow-500 hover:text-yellow-700">
-                                                Questions Upload
-                                            </button>}
-                                        {exam.publish ?
-                                            <button className="text-yellow-500 hover:text-yellow-700">
-                                                <MdOutlineUnpublished size={20} />
-                                            </button> : <button className="text-slate-600 pointer-events-none">
-                                                <MdOutlinePublishedWithChanges size={20} />
-                                            </button>}
-                                        <button onClick={() => handleUpdateExam(sectionIndex, examIndex)} className="text-yellow-500 hover:text-yellow-700">
-                                            <AiOutlineEdit size={20} />
-                                        </button>
-                                        <button className="text-red-500 hover:text-red-700">
-                                            <AiOutlineDelete size={20} />
-                                        </button>
-                                    </div>
-
-                                </div>
-                            ))}
-                            <button onClick={() => handleCreateExam(section.subject_id as string)}
-                                className="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">
-                                Create Exam
-                            </button>
-                        </div>
-                    )}
-                </div>
-            ))}
-            {
-                open && (
-                    <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center'>
-                        <QuizForm examId = {examid} isVisible={open} onClose={closeModal} />
-                    </div>
-                )
-            }
-        </div>
+                  ))}
+                <button
+                  onClick={() => handleCreateExam(section.subject_id as string)}
+                  className="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700"
+                >
+                  Create Exam
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
+        {open && (
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center">
+            <QuizForm examId={examid} isVisible={open} onClose={closeModal} />
+          </div>
+        )}
+      </div>
     );
 };
 
