@@ -29,17 +29,17 @@ const Privateroute: React.FC<Props> = ({ children }) => {
   };
 
   useEffect(() => {
-    const token = Cookies.get("accessTokenadmin");
+    const token = Cookies.get("accessToken");
     if (token && !isTokenExpired(token)) {
       try {
         const decoded = decode(token) as any;
         dispatch(setAuth({ user: decoded, accessToken: token }));
       } catch (error) {
-        Cookies.remove("accessTokenadmin");
+        Cookies.remove("accessToken");
         dispatch(clearAuth());
       }
     } else {
-      Cookies.remove("accessTokenadmin");
+      Cookies.remove("accessToken");
       dispatch(clearAuth());
     }
   }, [dispatch]);

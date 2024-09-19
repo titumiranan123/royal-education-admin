@@ -6,6 +6,7 @@ import CourseData from "./CourseData";
 // import CourseContent from "./CourseContent";
 import CourseInstructor from "./CourseInstructor";
 import Swal from "sweetalert2";
+import api from "../../../redux/api/api";
 
 const Createcourse: React.FC = () => {
   const [active, setActive] = useState(0);
@@ -63,15 +64,9 @@ const Createcourse: React.FC = () => {
       course_benefits: benefits,
     };
     try {
-      const response = await fetch("https://test.royaleducation.online/api/v1/course", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(combinedData),
-      });
-      const responseData = await response.json();
-      if (responseData.success) {
+      const response = await api.post("/api/v1/course",combinedData);
+
+      if (response.data.success) {
         Swal.fire({
           title: "Good job!",
           text: "Course Create Success!",
@@ -80,12 +75,11 @@ const Createcourse: React.FC = () => {
       } else {
         Swal.fire({
           title: "Something Wrong!",
-          text: responseData.message,
           icon: "error",
         });
       }
     } catch (error) {
-      console.log(error)
+   
       Swal.fire({
         title: "Something Wrong!",
         text: (error as any).message,

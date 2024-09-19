@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import api from "../../redux/api/api";
 
 interface Option {
   id: number;
@@ -37,6 +39,7 @@ const McqUploader: React.FC<mcqprop> = ({ subject }) => {
     setOptions(options.filter((option) => option.id !== id));
   };
   const { id } = useParams();
+  
   const handleSubmit = async () => {
     // Handle form submission, e.g., send data to server
 
@@ -45,31 +48,23 @@ const McqUploader: React.FC<mcqprop> = ({ subject }) => {
       question: question,
       options: options,
     };
-    console.log(data);
+    console.log(data)
     try {
-      const response = await fetch(`https://test.royaleducation.online/api/v1/exam/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await api.post(`/api/v1/exam/${id}`, data);
+       console.log(response);
+      if (response) {
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const responseData = await response.json();
-      if (responseData) {
         Swal.fire({
           title: "Good job!",
-          text: "Course Create Success!",
+          text: "MCQ Create Success!",
           icon: "success",
         });
       }
-      console.log("Response:", responseData);
-    } catch (error) {
-      console.error("Error posting data:", error);
+    } catch (_error) {
+       Swal.fire({
+         title: "Try again!",
+         icon: "error",
+       });
     }
   };
 
