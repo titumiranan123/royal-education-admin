@@ -65,7 +65,7 @@ const CourseContent: React.FC = () => {
     }, [data, courseId]);
 
 
-    const addNewSection = () => {
+    const addNewSection = (id:string) => {
         const newSection = {
             subject_id: '',
             subject_name: `Section ${courseContentData.length + 1}`,
@@ -81,10 +81,69 @@ const CourseContent: React.FC = () => {
             ],
             isExpanded: true, // Initially expanded
         };
+        const data = {
+          subject_name: `Section ${courseContentData.length + 1}`,
+          course_id: id,
+        };
+        api.post("/api/v1/subject", data)
+        .then((res)=>{
+          console.log(res)
+           refetch();
+           Swal.fire("subject created!", "", "success");
+        })
+        .catch((err)=>{
+console.log(err)
+ Swal.fire("subject create failed !", "", "error");
+        })
         setCourseContentData([...courseContentData, newSection]);
 
     };
-const handleDeleteSection = (index: number) => {
+
+    const updateSubject = (subject: any, courseId:string) => {
+      Swal.fire({
+        title: "Update/Upload Video",
+        html: `
+        <div class="swal2-content ">
+          <div class="mb-4">
+            <label for="subjectName" class="block text-white montserrat text-[18px] font-semibold">Video Title</label>
+            <input
+              id="subjectName"
+              type="text"
+              placeholder="Video Title"
+                 value="${subject.subject_name}" 
+              class="py-2 px-2 border border-gray-300 rounded-lg w-full text-gray-700"
+            />
+          </div>
+        
+        </div>
+      `,
+        showCancelButton: true,
+        confirmButtonText: "Upload",
+        cancelButtonText: "Cancel",
+        preConfirm: () => {
+          const subject_name = (
+            document.getElementById("subjectName") as HTMLInputElement
+          ).value;
+
+          const info = {
+            id: subject.subject_id,
+            course_id: courseId,
+            subject_name: subject_name,
+          };
+
+          api
+            .put(`/api/v1/subject/${subject.id}`, info)
+            .then((_response) => {
+              refetch();
+              Swal.fire("Subject  updated !", "", "success");
+            })
+            .catch((_error) => {
+              Swal.fire(`Failed to subject update`, "", "error");
+            });
+        },
+      });
+    };
+const handleDeleteSection = (id: string) => {
   Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -95,11 +154,18 @@ const handleDeleteSection = (index: number) => {
     confirmButtonText: "Yes, delete it!",
   }).then((result) => {
     if (result.isConfirmed) {
-      const updatedContentData = courseContentData.filter(
-        (_, i) => i !== index
-      );
-      setCourseContentData(updatedContentData);
-      Swal.fire("Deleted!", "Your section has been deleted.", "success");
+      
+      api
+        .delete(`/api/v1/subject/${id}`)
+        .then((_response) => {
+        
+          Swal.fire("Deleted!", "Your section has been deleted.", "success");
+        })
+        .catch((_err) => {
+          
+          Swal.fire("Failed to Delete!", "", "error");
+        });
+      
     }
   });
 };
@@ -202,59 +268,57 @@ const handleDeleteSection = (index: number) => {
                });
            },
          });
-         console.log(id);
+
     };
 
-    
-
-   const handleDeleteVideo = (
-     sectionIndex: number,
-     videoIndex: number,
-     videoId: string
-   ) => {
-     Swal.fire({
-       title: "Are you sure?",
-       text: "You won't be able to revert this!",
-       icon: "warning",
-       showCancelButton: true,
-       confirmButtonColor: "#3085d6",
-       cancelButtonColor: "#d33",
-       confirmButtonText: "Yes, delete it!",
-     }).then((result) => {
-       if (result.isConfirmed) {
-         // Call the delete API
-         api.delete(`/api/v1/course-content-delete/${videoId}`)
-           .then((response) => {
-            console.log(response)
-             const updatedContentData = courseContentData.map(
-               (section, index) => {
-                 if (index === sectionIndex) {
-                   return {
-                     ...section,
-                     subject_content: section.subject_content.filter(
-                       (_, i) => i !== videoIndex
-                     ),
-                   };
-                 }
-                 return section;
-               }
-             );
-             setCourseContentData(updatedContentData);
-             refetch(); // Optionally refetch any related data if necessary
-             Swal.fire("Deleted!", "Your video has been deleted.", "success");
-           })
-           
-           .catch((error) => {
-            console.log(error)
-             // Handle error
-             Swal.fire("Error!", "Failed to delete video.", "error");
-             console.error("Delete error:", error);
-           });
-       } else {
-         Swal.fire("Cancel Delete!", "", "error");
-       }
-     });
-   };
+    const handleDeleteVideo = (
+      sectionIndex: number,
+      videoIndex: number,
+      videoId: string
+    ) => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Call the delete API
+          api.delete(`/api/v1/course-content-delete/${videoId}`)
+            .then((response) => {
+              console.log(response)
+              const updatedContentData = courseContentData.map(
+                (section, index) => {
+                  if (index === sectionIndex) {
+                    return {
+                      ...section,
+                      subject_content: section.subject_content.filter(
+                        (_, i) => i !== videoIndex
+                      ),
+                    };
+                  }
+                  return section;
+                }
+              );
+              setCourseContentData(updatedContentData);
+              refetch(); // Optionally refetch any related data if necessary
+              Swal.fire("Deleted!", "Your video has been deleted.", "success");
+            })
+            
+            .catch((error) => {
+              console.log(error)
+              // Handle error
+              Swal.fire("Error!", "Failed to delete video.", "error");
+              console.error("Delete error:", error);
+            });
+        } else {
+          Swal.fire("Cancel Delete!", "", "error");
+        }
+      });
+    };
     const toggleSection = (index: number) => {
         const updatedContentData = courseContentData.map((section, i) => {
             if (i === index) {
@@ -402,15 +466,16 @@ const handleDeleteSection = (index: number) => {
                 </div>
                 <div className="flex space-x-2">
                   <button
-                    // onClick={() => {
-                    //   setSelectedSection(sectionIndex);
-                    // }}
+                    onClick={() => {
+                      
+                      updateSubject(section, courseId as string);
+                    }}
                     className="text-[#b336ec] hover:text-[#ad11f5] montserrat"
                   >
                     <AiOutlineEdit size={20} />
                   </button>
                   <button
-                    onClick={() => handleDeleteSection(sectionIndex)}
+                    onClick={() => handleDeleteSection(section.subject_id)}
                     className="text-red-500 hover:text-red-700 montserrat"
                   >
                     <AiOutlineDelete size={20} />
@@ -423,7 +488,6 @@ const handleDeleteSection = (index: number) => {
                     (video: any, videoIndex: number) => (
                       <div key={videoIndex} className="mb-2">
                         <CourseContentcard
-                          
                           handleDeleteVideo={() =>
                             handleDeleteVideo(
                               sectionIndex,
@@ -431,12 +495,14 @@ const handleDeleteSection = (index: number) => {
                               video.id
                             )
                           }
-                          handleVideoUpdate={() =>
-                           {
-                             console.log(section,"section");
-                             handleVideoUpdate(video.id,section.subject_id,video);
-                           }
-                          }
+                          handleVideoUpdate={() => {
+                        
+                            handleVideoUpdate(
+                              video.id,
+                              section.subject_id,
+                              video
+                            );
+                          }}
                           content={video}
                           index={videoIndex + 1}
                         />
@@ -455,7 +521,7 @@ const handleDeleteSection = (index: number) => {
           ))}
           <div
             className="flex items-center cursor-pointer text-blue-500 hover:text-blue-700 montserrat mt-4"
-            onClick={addNewSection}
+            onClick={() => addNewSection(courseId as string)}
           >
             <AiOutlinePlusCircle className="mr-2 text-2xl" />
             <span className="text-lg">Add Section Here</span>

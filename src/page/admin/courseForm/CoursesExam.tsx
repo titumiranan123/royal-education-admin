@@ -227,20 +227,7 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                   {section.subject_name}
                 </h3>
               </div>
-              <div className="flex space-x-2">
-                <button
-                  className="text-purple-500 hover:text-purple-700"
-                  onClick={() => console.log("Update clicked")}
-                >
-                  <AiOutlineEdit size={20} />
-                </button>
-                <button
-                  className="text-red-500 hover:text-red-700"
-                  onClick={() => console.log("Delete clicked")}
-                >
-                  <AiOutlineDelete size={20} />
-                </button>
-              </div>
+             
             </div>
             {section.isExpanded && (
               <div className="px-4 py-2">
