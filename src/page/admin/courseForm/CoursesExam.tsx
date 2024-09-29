@@ -6,8 +6,8 @@ import { Course } from '../Interface/Courseinterface';
 import { AiOutlineDelete, AiOutlineEdit, AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import Swal from 'sweetalert2';
 import { MdOutlinePublishedWithChanges, MdOutlineUnpublished } from 'react-icons/md';
-import QuizForm from '../utils/Quize';
 import api from '../../../redux/api/api';
+import { Link } from 'react-router-dom';
 
 interface Exam {
     id: string;
@@ -32,8 +32,7 @@ interface Props {
 
 const CoursesExam: React.FC<Props> = ({ id }) => {
     const { data, refetch } = useCourse();
-    const [open, setOpen] = useState(false)
-    const [examid, setExamId] = useState('')
+  
     const [courseContentData, setCourseContentData] = useState<Subject[]>([]);
 
     useEffect(() => {
@@ -204,7 +203,7 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
          }
        });
      };
-    const closeModal = () => setOpen(!open)
+   
     return (
       <div className="p-4">
         <h2 className="text-xl font-bold text-white mb-4">Course Exam</h2>
@@ -227,7 +226,6 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                   {section.subject_name}
                 </h3>
               </div>
-             
             </div>
             {section.isExpanded && (
               <div className="px-4 py-2">
@@ -246,16 +244,12 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                       </div>
                       <div className="flex space-x-2">
                         {exam.exam_type !== "written" ? (
-                          <button
-                            onClick={() => {
-                              setExamId("");
-                              setOpen(!open);
-                              setExamId(exam.id);
-                            }}
+                          <Link
+                            to={`/dashboard/course/insert-mcq/${exam.id}`}
                             className="text-yellow-500 hover:text-yellow-700"
                           >
                             Mcq Upload
-                          </button>
+                          </Link>
                         ) : (
                           <button
                             onClick={() => handleUploadQuestion(sectionIndex)}
@@ -300,11 +294,6 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
             )}
           </div>
         ))}
-        {open && (
-          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center">
-            <QuizForm examId={examid} isVisible={open} onClose={closeModal} />
-          </div>
-        )}
       </div>
     );
 };

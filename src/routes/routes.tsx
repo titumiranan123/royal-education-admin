@@ -13,6 +13,7 @@ import Privateroute from "./Privateroute";
 import Adduser from "../page/adduser/Adduser";
 import UpdateUser from "../page/updateUser/updateUser";
 import Mannagement from "../page/Mannagement/Mannagement";
+import Insertmcq from "../page/admin/CourseContent/Insertmcq";
 
 
 export const routes = createBrowserRouter([
@@ -41,7 +42,7 @@ export const routes = createBrowserRouter([
         path: "all-course",
         element: <Allcourse />,
       },
-      
+
       {
         path: "invoice",
         element: <Invoice />,
@@ -77,8 +78,11 @@ export const routes = createBrowserRouter([
           {
             path: "video-upload/:id",
             element: <CourseContent />,
-          }
-          
+          },
+          {
+            path:"insert-mcq/:id",
+            element:<Insertmcq />
+          },
         ],
       },
     ],

@@ -4,11 +4,11 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import api from "../../../redux/api/api";
 
-const QuizForm = ({ isVisible, onClose, examId }:any) => {
+const QuizForm = ({  examId }:any) => {
   const [question_text, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", "", ""]);
   const [answer, setAnswer] = useState("");
-  if (!isVisible) return null;
+
   const handleOptionChange = (index:any, value:any) => {
     const newOptions = [...options];
     newOptions[index] = value;
@@ -41,28 +41,7 @@ const QuizForm = ({ isVisible, onClose, examId }:any) => {
   return (
     <div className="z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-[800px] h-auto">
-        <div className="flex justify-end">
-          <button
-            className="text-gray-700 hover:text-gray-900 focus:outline-none"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
+      
         <h1 className="text-2xl font-bold mb-4">Create a Quiz Question</h1>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
