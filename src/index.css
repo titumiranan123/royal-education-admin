@@ -402,3 +402,25 @@ mark:after {
 .text-white{
   color: rgb(255, 255, 255) !important;
 }
+.question {
+  min-height: 100px !important;
+  outline: none !important;
+}
+.optionsarea{
+ height: 90px !important; /* Set a minimum height */
+  max-height: 400px; /* Optional: set a maximum height */
+  overflow-y: auto; 
+
+}
+.jodit-workplace{
+  overflow: scroll !important;
+  min-height: 100% !important;
+  outline: none !important;
+}
+.jodit-wysiwyg{
+    outline: none !important;
+}
+.swal-selects{
+  background: #1f2937 !important;
+  outline: none !important;
+}

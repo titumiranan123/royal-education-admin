@@ -1,21 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useRef, useMemo } from "react";
 import Swal from "sweetalert2";
 import api from "../../../redux/api/api";
+import JoditEditor from "jodit-react";
 
-const QuizForm = ({  examId }:any) => {
+const QuizForm = ({ examId }: any) => {
   const [question_text, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", "", ""]);
   const [answer, setAnswer] = useState("");
-
-  const handleOptionChange = (index:any, value:any) => {
+ 
+  const handleOptionChange = (index: any, value: any) => {
     const newOptions = [...options];
     newOptions[index] = value;
     setOptions(newOptions);
   };
 
   const optionLabels = ["A", "B", "C", "D", "E"];
+
   const uploadMcq = () => {
     const data = {
       question_text,
@@ -23,77 +25,142 @@ const QuizForm = ({  examId }:any) => {
       answer,
       exam_id: examId,
     };
-    api.post("/api/v1/insert-mcq", data)
+    api
+      .post("/api/v1/insert-mcq", data)
       .then((_response) => {
-    
-        Swal.fire("Mcq  upload!", "", "success");
+        Swal.fire("MCQ uploaded!", "", "success");
       })
       .catch((_error) => {
-        Swal.fire(`Failed to mcq upload`, "", "error");
+        Swal.fire(`Failed to upload MCQ`, "", "error");
       });
-    
+
     setQuestion("");
     setOptions(["", "", "", "", ""]);
     setAnswer("");
- 
   };
 
+  // Jodit Editor Configuration for both Question and Options
+  const editor = useRef(null);
+  const placeholder = "Enter your question here...";
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      placeholder: placeholder,
+      height: 200,
+      toolbarAdaptive: false,
+      toolbarSticky: false,
+    }),
+    [placeholder]
+  );
+    const optionConfig = useMemo(
+      () => ({
+        readonly: false, // Enables editing
+        placeholder: "Enter your content here...",
+        height: 300, // Set editor height
+        toolbarSticky: false, // Prevent sticky toolbar
+        toolbarAdaptive: false, // Make the toolbar not adaptive
+        buttons: [
+          "bold",
+          "italic",
+          "underline",
+          "superscript",
+          "subscript",
+          "|", // Added superscript and subscript
+          "ul",
+          "ol",
+          "|",
+          "left",
+          "center",
+          "right",
+        ], // Toolbar buttons
+        buttonsXS: ["bold", "italic", "superscript", "subscript"], // Buttons on smaller screens
+      }),
+      []
+    );
+
+
   return (
-    <div className="z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[800px] h-auto">
-      
-        <h1 className="text-2xl font-bold mb-4">Create a Quiz Question</h1>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
+    <div className="z-50 flex items-center justify-center min-h-screen bg-gray-900 bg-opacity-60 max-w-[1100px] px-4">
+      <div className="bg-white rounded-2xl shadow-lg p-8 w-full ">
+        {/* Title */}
+        <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
+          Create a Quiz Question
+        </h1>
+
+        {/* Question Input */}
+        <div className="mb-6 ">
+          <label className="block text-lg font-medium text-gray-700 mb-2">
             Question:
           </label>
-          <textarea
-            value={question_text}
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder="Enter your question here"
-            className="w-full border border-gray-300 rounded-md p-2"
-          />
+          <div className="border question border-gray-300 rounded-md h-[300px] bg-gray-50 transition duration-150 ease-in-out">
+            <JoditEditor
+              ref={editor}
+              value={question_text}
+              config={config}
+              onBlur={(newContent) => setQuestion(newContent)}
+              onChange={(newContent) => setQuestion(newContent)}
+            />
+          </div>
         </div>
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Options:
-        </label>
-        <div className="mb-4 grid grid-cols-2 gap-5">
-          {options.map((option, index) => (
-            <div key={index} className="mb-2 flex items-center">
-              <span className="mr-2 font-bold">{optionLabels[index]}.</span>
-              <textarea
-                value={option}
-                onChange={(e) => handleOptionChange(index, e.target.value)}
-                placeholder={`Option ${optionLabels[index]}`}
-                className="w-full border border-gray-300 rounded-md p-2"
-              />
-            </div>
-          ))}
+
+        {/* Options Input */}
+        <div className="mb-6">
+          <label className="block text-lg font-medium text-gray-700 mb-2">
+            Options:
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {options.map((option, index) => (
+              <div key={index} className="flex  gap-2">
+                <span className="font-bold text-gray-700">
+                  {optionLabels[index]}.
+                </span>
+                <div className="border optionsarea border-gray-300 rounded-md bg-gray-50 transition duration-150 ease-in-out">
+                  <JoditEditor
+                    ref={editor}
+                    value={option}
+                    config={optionConfig}
+                    onBlur={(newContent) =>
+                      handleOptionChange(index, newContent)
+                    }
+                    onChange={(newContent) =>
+                      handleOptionChange(index, newContent)
+                    }
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Answer:
+
+        {/* Answer Input */}
+        <div className="mb-6">
+          <label className="block text-lg font-medium text-gray-700 mb-2">
+            Correct Answer:
           </label>
           <select
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
-            className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition duration-150 ease-in-out"
+            className="block w-full border border-gray-300 rounded-lg py-2 px-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-base transition duration-150 ease-in-out"
           >
             <option value="" disabled>
-              Select correct answer
+              Select the correct answer
             </option>
             {options.map((option, index) => (
               <option key={index} value={option}>
-                {optionLabels[index]}: {option}
+                {optionLabels[index]}:{" "}
+                <div
+                  dangerouslySetInnerHTML={{ __html: option }}
+                />
               </option>
             ))}
           </select>
         </div>
+
+        {/* Save Button */}
         <div className="flex justify-end">
           <button
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-            type="button"
-            onClick={() => uploadMcq()} // Replace with your save function
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            onClick={uploadMcq}
           >
             Save Question
           </button>

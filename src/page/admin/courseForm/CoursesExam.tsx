@@ -72,44 +72,81 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
     };
 
     const handleCreateExam = (sectionIndex: string) => {
-        Swal.fire({
-            title: 'Create Exam',
-            html:
-                `<div class="swal2-content">
-          <input id="examName" class=" my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px] focus:outline-none border-none" placeholder="Exam Name">
-          <input id="examTime" class=" focus:outline-none border-none my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]" placeholder="Exam Time">
-          <select id="examType" class="swal2-select my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]">
-            <option value="written">Written</option>
-            <option value="mcq">MCQ</option>
-          </select>
-        </div>`,
-            focusConfirm: false,
-            confirmButtonText: 'Upload',
-            cancelButtonText: 'Cancel',
-            preConfirm: () => {
-                const examName = (document.getElementById('examName') as HTMLInputElement).value;
-                const examTime = (document.getElementById('examTime') as HTMLInputElement).value;
-                const examType = (document.getElementById('examType') as HTMLSelectElement).value;
-                const data = {
-                    subject_id: sectionIndex,
-                    exam_name: examName,
-                    time: examTime,
-                    exam_type: examType,
-                    publish: false
-                }
-                api.post("/api/v1/create-exam", data)
-                .then((_response) => {
-                    refetch();
-                    Swal.fire("Exam Created !", "", "success");
-                })
-                .catch((_error)=>{
-    
-                    refetch();
-                    Swal.fire("Exam Create Failed!", "", "error");
-                })
+      Swal.fire({
+        title: "Create Exam",
+        html: `<div class="swal2-content">
+        <input id="examName" class=" my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px] focus:outline-none border-none" placeholder="Exam Name">
+        <input id="examTime" class=" focus:outline-none border-none my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]" placeholder="Exam Time">
+        
+        <select id="examType" class="swal2-select swal-selects my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]">
+          <option value="written">Written</option>
+          <option value="mcq">MCQ</option>
+        </select>
+        
+        <input id="totalQuestion" type="number" class="hidden my-2 p-2 bg-gray-800 outline-none text-white rounded-lg w-[300px]" placeholder="Total Questions">
+      </div>`,
+        focusConfirm: false,
+        confirmButtonText: "Upload",
+        cancelButtonText: "Cancel",
+        showCancelButton: true,
+        didOpen: () => {
+          const examTypeElement = document.getElementById(
+            "examType"
+          ) as HTMLSelectElement;
+          const totalQuestionElement = document.getElementById(
+            "totalQuestion"
+          ) as HTMLInputElement;
+
+          // Add event listener to show/hide the totalQuestion input based on examType selection
+          examTypeElement.addEventListener("change", () => {
+            if (examTypeElement.value === "mcq") {
+              totalQuestionElement.classList.remove("hidden"); // Show the totalQuestion input for MCQ
+            } else {
+              totalQuestionElement.classList.add("hidden"); // Hide the totalQuestion input for other types
             }
-        });
+          });
+        },
+        preConfirm: () => {
+          const examName = (
+            document.getElementById("examName") as HTMLInputElement
+          ).value;
+          const examTime = (
+            document.getElementById("examTime") as HTMLInputElement
+          ).value;
+          const examType = (
+            document.getElementById("examType") as HTMLSelectElement
+          ).value;
+          const totalQuestion = (
+            document.getElementById("totalQuestion") as HTMLInputElement
+          ).value;
+
+          const data: any = {
+            subject_id: sectionIndex,
+            exam_name: examName,
+            time: examTime,
+            exam_type: examType,
+            publish: false,
+          };
+
+          if (examType === "mcq") {
+            data.totalQuestion = totalQuestion; // Add totalQuestion only for MCQ type
+          }
+
+          // API call to create the exam
+          return api
+            .post("/api/v1/create-exam", data)
+            .then((_response) => {
+              refetch();
+              Swal.fire("Exam Created!", "", "success");
+            })
+            .catch((_error) => {
+              refetch();
+              Swal.fire("Exam Creation Failed!", "", "error");
+            });
+        },
+      });
     };
+
 
     const handleUpdateExam = (sectionIndex: number, examIndex: number) => {
         const exam = courseContentData[sectionIndex].exam[examIndex];
