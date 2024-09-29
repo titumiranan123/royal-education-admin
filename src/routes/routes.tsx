@@ -6,7 +6,6 @@ import Users from "../page/admin/user/User";
 import Createcourse from "../page/admin/courseForm/Createcourse";
 import Allcourse from "../page/admin/Allcourse/Allcourse";
 import Updatecourse from "../page/admin/Updatecourse/Updatecourse";
-import MCQstore from "../page/admin/mcq/MCQstore";
 import Updatelayout from "../page/admin/Updatecourse/Updatelayout";
 import CourseContent from "../page/admin/courseForm/CourseContent";
 import Loginpage from "../page/loginpage/Loginpage";
@@ -14,6 +13,7 @@ import Privateroute from "./Privateroute";
 import Adduser from "../page/adduser/Adduser";
 import UpdateUser from "../page/updateUser/updateUser";
 import Mannagement from "../page/Mannagement/Mannagement";
+import Insertmcq from "../page/admin/CourseContent/Insertmcq";
 
 
 export const routes = createBrowserRouter([
@@ -42,10 +42,7 @@ export const routes = createBrowserRouter([
         path: "all-course",
         element: <Allcourse />,
       },
-      {
-        path: "mcq-store",
-        element: <MCQstore />,
-      },
+
       {
         path: "invoice",
         element: <Invoice />,
@@ -81,8 +78,11 @@ export const routes = createBrowserRouter([
           {
             path: "video-upload/:id",
             element: <CourseContent />,
-          }
-          
+          },
+          {
+            path:"insert-mcq/:id",
+            element:<Insertmcq />
+          },
         ],
       },
     ],

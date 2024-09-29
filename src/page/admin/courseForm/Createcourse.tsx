@@ -6,6 +6,7 @@ import CourseData from "./CourseData";
 // import CourseContent from "./CourseContent";
 import CourseInstructor from "./CourseInstructor";
 import Swal from "sweetalert2";
+import api from "../../../redux/api/api";
 
 const Createcourse: React.FC = () => {
   const [active, setActive] = useState(0);
@@ -63,15 +64,9 @@ const Createcourse: React.FC = () => {
       course_benefits: benefits,
     };
     try {
-      const response = await fetch("https://test.royaleducation.online/api/v1/course", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(combinedData),
-      });
-      const responseData = await response.json();
-      if (responseData.success) {
+      const response = await api.post("/api/v1/course",combinedData);
+
+      if (response.data.success) {
         Swal.fire({
           title: "Good job!",
           text: "Course Create Success!",
@@ -80,12 +75,11 @@ const Createcourse: React.FC = () => {
       } else {
         Swal.fire({
           title: "Something Wrong!",
-          text: responseData.message,
           icon: "error",
         });
       }
     } catch (error) {
-      console.log(error)
+   
       Swal.fire({
         title: "Something Wrong!",
         text: (error as any).message,
@@ -95,7 +89,15 @@ const Createcourse: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex flex-col-reverse lg:flex-col  max-w-[1240px] mx-auto">
+    <div className="w-full flex flex-col-reverse lg:flex-col  max-w-[1240px] mx-auto px-4 lg:px-0 ">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold text-gray-100">Create a New Course</h1>
+        <p className="text-lg text-gray-400 mt-2">
+          Fill out the course information and details to create a new course for
+          students.
+        </p>
+      </div>
+      <div className="bg h-[2px] w-full mt-4 mb-10"></div>
       <div className="lg:w-[70%] w-full">
         {active === 0 && (
           <CourseInformation
@@ -134,7 +136,7 @@ const Createcourse: React.FC = () => {
           />
         )} */}
       </div>
-      <div className="lg:w-[20%] mt-[100px]  lg:fixed top-18 right-0">
+      <div className="lg:w-[20%] mt-[100px]  lg:fixed top-32 right-0">
         <Courseoptions active={active} setActive={setActive} />
       </div>
     </div>

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import CourseInformation from "../courseForm/CourseInformation";
@@ -11,6 +10,7 @@ import { Course } from "../Interface/Courseinterface";
 import { FaPlus } from "react-icons/fa";
 
 import Swal from "sweetalert2";
+import api from "../../../redux/api/api";
 
 const Updatecourse: React.FC = () => {
   const [active, setActive] = useState(0);
@@ -84,18 +84,10 @@ const Updatecourse: React.FC = () => {
     };
 
     try {
-      const response = await fetch(
-        `https://test.royaleducation.online/api/v1/course/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(combinedData),
-        }
+      const response = await api.put(
+        `/api/v1/course/${id}`,combinedData
       );
-      const responseData = await response.json();
-      if (responseData.success) {
+      if (response?.data?.success) {
         Swal.fire({
           title: "Good job!",
           text: "Course Update Success!",
@@ -103,8 +95,7 @@ const Updatecourse: React.FC = () => {
         });
       } else {
         Swal.fire({
-          title: "Something Wrong!",
-          text: responseData.message,
+          title: "Something Wrong ! Try again",
           icon: "error",
         });
       }
@@ -118,7 +109,7 @@ const Updatecourse: React.FC = () => {
   };
 
   return (
-    <div className="w-full mt-10 flex flex-col-reverse lg:flex-col  max-w-[1240px] mx-auto">
+    <div className="w-full mt-5 flex flex-col-reverse lg:flex-col  max-w-[1240px] mx-auto">
       <div className="flex justify-between items-center pe-10">
         <h1 className="montserrat font-semibold text-white text-[20px]">
           Update Your Course
@@ -130,12 +121,7 @@ const Updatecourse: React.FC = () => {
           >
             <FaPlus /> Add Lecture
           </Link>
-          <Link
-            to={`/dashboard/course/exam/${id}`}
-            className="bg montserrat font-semibold text-white py-2 px-3 flex justify-center items-center gap-2 rounded-xl w-[180]"
-          >
-            <FaPlus /> Add Exam
-          </Link>
+          
         </div>
       </div>
       <div className="lg:w-[70%] w-full">

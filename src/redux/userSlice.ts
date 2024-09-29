@@ -21,6 +21,7 @@ isLoading: true,
 };
 
 // Async thunk for login action
+
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (
@@ -30,13 +31,24 @@ export const loginUser = createAsyncThunk(
     try {
       // Make API request
       const response = await api.post("/api/v1/admin/login", credentials);
+      console.log(response.data.data.token);
+
       // Extract access token from response
       const accessToken = response.data.data.token;
+
       // Store access token in cookies
-      Cookies.set("accessTokenadmin", accessToken);
+      Cookies.set("accessToken", accessToken, { expires: 1 }); // expires in 1 day or adjust as needed
+
+      // Decode the token (optional, if you need the payload)
       const decodedToken: any = decode(accessToken);
+
+      // Redirect after setting the token
+      window.location.href = "/dashboard";
+
+      // Return user data and accessToken
       return { user: decodedToken.payload, accessToken };
     } catch (error: any) {
+      // Handle error and return the error message
       return rejectWithValue(error.response?.data?.message || "Login failed");
     }
   }
@@ -50,7 +62,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      Cookies.remove("accessTokenadmin");
+      Cookies.remove("accessToken");
       window.location.href='/'
     },
     setAuth(state, action: PayloadAction<{ user: any; accessToken: string }>) {
@@ -58,12 +70,12 @@ const authSlice = createSlice({
       state.user = user.payload;
       state.isLoading = false;
       state.isAuthenticated = true;
-      Cookies.set("accessTokenadmin", accessToken);
+      Cookies.set("accessToken", accessToken);
     },
     clearAuth: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      Cookies.remove("accessTokenadmin");
+      Cookies.remove("accessToken");
     },
   },
   extraReducers: (builder) => {
