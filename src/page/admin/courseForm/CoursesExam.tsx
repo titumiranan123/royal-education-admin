@@ -15,7 +15,8 @@ interface Exam {
     exam_name: string;
     time: string;
     exam_type: string;
-    publish: number;
+    publish: string;
+    totalQuestion:number
     questions: any[];
 }
 
@@ -76,7 +77,7 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
         title: "Create Exam",
         html: `<div class="swal2-content">
         <input id="examName" class=" my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px] focus:outline-none border-none" placeholder="Exam Name">
-        <input id="examTime" class=" focus:outline-none border-none my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]" placeholder="Exam Time">
+        <input id="examTime" class=" focus:outline-none border-none my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]" placeholder="Exam Time (minute)">
         
         <select id="examType" class="swal2-select swal-selects my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]">
           <option value="written">Written</option>
@@ -149,48 +150,95 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
 
 
     const handleUpdateExam = (sectionIndex: number, examIndex: number) => {
-        const exam = courseContentData[sectionIndex].exam[examIndex];
-        console.log(exam)
-        Swal.fire({
-            title: 'Update Exam',
-            html:
-                `<div class="swal2-content">
-          <input id="examName" value="${exam.exam_name}" class=" my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px] focus:outline-none border-none" placeholder="Exam Name">
-          <input id="examTime" value="${exam.time}" class=" focus:outline-none border-none my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]" placeholder="Exam Time">
-          <select id="examType" class="swal2-select my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]">
-            <option value="written" ${exam.exam_type === 'written' ? 'selected' : ''}>Written</option>
-            <option value="mcq" ${exam.exam_type === 'mcq' ? 'selected' : ''}>MCQ</option>
-          </select>
-        </div>`,
-            focusConfirm: false,
-            confirmButtonText: 'Update',
-            cancelButtonText: 'Cancel',
-            preConfirm: () => {
-                const examName = (document.getElementById('examName') as HTMLInputElement).value;
-                const examTime = (document.getElementById('examTime') as HTMLInputElement).value;
-                const examType = (document.getElementById('examType') as HTMLSelectElement).value;
-                const data = {
-                  subject_id: exam.subject_id,
-                  exam_name: examName,
-                  time: examTime,
-                  exam_type: examType,
-                  publish: false,
-                };
+      const exam = courseContentData[sectionIndex].exam[examIndex];
 
-                 api
-                   .put(`/api/v1/exam-update/${exam.id}`, data)
-                   .then((_response) => {
-                     refetch();
-          
-                     Swal.fire("Exam Updated!", "", "success");
-                   })
-                   .catch((_error) => {
-                     Swal.fire("Exam Update Failed!", "", "error");
-                   });
-                
+      Swal.fire({
+        title: "Update Exam",
+        html: `<div class="swal2-content">
+        <input id="examName" value="${
+          exam.exam_name
+        }" class="my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px] focus:outline-none border-none" placeholder="Exam Name">
+        <input id="examTime" value="${
+          exam.time
+        }" class="focus:outline-none border-none my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]" placeholder="Exam Time (minute)">
+        
+        <select id="examType" class="swal2-select my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]">
+          <option value="written" ${
+            exam.exam_type === "written" ? "selected" : ""
+          }>Written</option>
+          <option value="mcq" ${
+            exam.exam_type === "mcq" ? "selected" : ""
+          }>MCQ</option>
+        </select>
+        
+        <input id="totalQuestion" type="number" value="${
+          exam.totalQuestion || ""
+        }" class="${
+          exam.exam_type === "mcq" ? "" : "hidden"
+        } my-2 p-2 bg-gray-800 text-white rounded-lg w-[300px]" placeholder="Total Questions">
+      </div>`,
+        focusConfirm: false,
+        confirmButtonText: "Update",
+        cancelButtonText: "Cancel",
+        showCancelButton: true,
+        didOpen: () => {
+          const examTypeElement = document.getElementById(
+            "examType"
+          ) as HTMLSelectElement;
+          const totalQuestionElement = document.getElementById(
+            "totalQuestion"
+          ) as HTMLInputElement;
+
+          // Add event listener to toggle the visibility of the totalQuestion input based on the exam type
+          examTypeElement.addEventListener("change", () => {
+            if (examTypeElement.value === "mcq") {
+              totalQuestionElement.classList.remove("hidden");
+            } else {
+              totalQuestionElement.classList.add("hidden");
             }
-        });
+          });
+        },
+        preConfirm: () => {
+          const examName = (
+            document.getElementById("examName") as HTMLInputElement
+          ).value;
+          const examTime = (
+            document.getElementById("examTime") as HTMLInputElement
+          ).value;
+          const examType = (
+            document.getElementById("examType") as HTMLSelectElement
+          ).value;
+          const totalQuestion = (
+            document.getElementById("totalQuestion") as HTMLInputElement
+          ).value;
+
+          const data: any = {
+            subject_id: exam.subject_id,
+            exam_name: examName,
+            time: examTime,
+            exam_type: examType,
+            publish: exam.publish, // Keep the current publish status
+          };
+
+          // Add totalQuestion only if the exam type is MCQ
+          if (examType === "mcq") {
+            data.totalQuestion = totalQuestion;
+          }
+
+          // Update exam via API
+          return api
+            .put(`/api/v1/exam-update/${exam.id}`, data)
+            .then((_response) => {
+              refetch();
+              Swal.fire("Exam Updated!", "", "success");
+            })
+            .catch((_error) => {
+              Swal.fire("Exam Update Failed!", "", "error");
+            });
+        },
+      });
     };
+
 
     const handleUploadQuestion = (sectionIndex: number) => {
         Swal.fire({
@@ -295,12 +343,12 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                             Questions Upload
                           </button>
                         )}
-                        {exam.publish ? (
-                          <button className="text-yellow-500 hover:text-yellow-700">
+                        {exam.publish==="false" ? (
+                          <button className="text-gray-500 hover:text-yellow-700">
                             <MdOutlineUnpublished size={20} />
                           </button>
                         ) : (
-                          <button className="text-slate-600 pointer-events-none">
+                          <button title='published' className="text-yellow-600 pointer-events-none">
                             <MdOutlinePublishedWithChanges size={20} />
                           </button>
                         )}

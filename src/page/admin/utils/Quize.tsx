@@ -4,12 +4,14 @@ import { useState, useRef, useMemo } from "react";
 import Swal from "sweetalert2";
 import api from "../../../redux/api/api";
 import JoditEditor from "jodit-react";
+import useExam from "../../../hook/useExam";
 
 const QuizForm = ({ examId }: any) => {
   const [question_text, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", "", ""]);
   const [answer, setAnswer] = useState("");
- 
+ const { data } = useExam(examId);
+ console.log(data)
   const handleOptionChange = (index: any, value: any) => {
     const newOptions = [...options];
     newOptions[index] = value;
@@ -86,6 +88,15 @@ const QuizForm = ({ examId }: any) => {
         <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
           Create a Quiz Question
         </h1>
+        <div className="flex justify-between items-center">
+          <p className="text-2xl text-gray-800 font-bold">{data?.exam_name}</p>
+          <p className="text-xl text-gray-800 font-bold flex gap-2">
+            Total Question:
+            <span>
+              {data?.totalInsert}/{data?.totalQuestion}
+            </span>
+          </p>
+        </div>
 
         {/* Question Input */}
         <div className="mb-6 ">
@@ -148,9 +159,7 @@ const QuizForm = ({ examId }: any) => {
             {options.map((option, index) => (
               <option key={index} value={option}>
                 {optionLabels[index]}:{" "}
-                <div
-                  dangerouslySetInnerHTML={{ __html: option }}
-                />
+                <div dangerouslySetInnerHTML={{ __html: option }} />
               </option>
             ))}
           </select>
