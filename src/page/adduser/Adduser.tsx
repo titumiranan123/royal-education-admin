@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import api from "../../redux/api/api";
 
 
 type Inputs = {
@@ -25,7 +25,9 @@ const Adduser: React.FC = () => {
   } = useForm<Inputs>();
 
   const password = watch("password", "");
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  try {
+    // Creating a user registration payload
     const info = {
       name: data.name,
       email: data.email,
@@ -33,36 +35,41 @@ const Adduser: React.FC = () => {
       mobile: data.mobile,
       college: data.college,
     };
-    fetch("https://test.royaleducation.online/api/v1/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(info),
-    })
-      .then((res) => res.json())
-      .then((info: any) => {
-        if (info.success) {
-          navigate("/dashboard/user");
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: info.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        } else {
-          Swal.fire({
-            position: "center",
-            icon: "error",
-            title: info.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      });
-  };
 
+    // Making a POST request to register the user
+    const response = await api.post("/api/v1/register", info);
+
+    // Handling the response
+    if (response.data.success) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: response.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      navigate("/dashboard/user");
+    } else {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: response.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  } catch (error) {
+    // Handling any errors
+    Swal.fire({
+      position: "center",
+      icon: "error",
+      title: "Failed to register user",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    console.error("Error during registration:", error);
+  }
+};
   return (
     <div className="mx-auto relative pt-10 pb-10">
       <div className="mx-auto">
