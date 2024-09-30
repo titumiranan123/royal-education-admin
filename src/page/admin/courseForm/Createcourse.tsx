@@ -14,6 +14,7 @@ const Createcourse: React.FC = () => {
 
   const [courseInfo, setCourseInfo] = useState({
     title: "",
+    slug:"",
     description: "",
     price: "",
     discount: "",
@@ -25,7 +26,8 @@ const Createcourse: React.FC = () => {
     enrollment_last_date: "",
     type: " ",
     category: "",
-    status: "",
+    course_type:"",
+    status: "active",
   });
   
   const [courseDetails, setDetails] = useState([

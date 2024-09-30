@@ -19,6 +19,7 @@ const Updatecourse: React.FC = () => {
   const [benefits, setBenefit] = useState([{ title: "" }]);
   const [courseInfo, setCourseInfo] = useState({
     title: "",
+    slug: "",
     description: "",
     price: "",
     discount: "",
@@ -30,6 +31,7 @@ const Updatecourse: React.FC = () => {
     enrollment_last_date: "",
     type: " ",
     category: "",
+    course_type: "",
     status: "",
   });
   const [courseDetails, setDetails] = useState([
@@ -51,6 +53,7 @@ const Updatecourse: React.FC = () => {
     if (course) {
       setCourseInfo({
         title: course?.title,
+        slug: course?.slug,
         description: course?.description,
         price: course?.price,
         discount: course?.discount,
@@ -59,9 +62,13 @@ const Updatecourse: React.FC = () => {
         total_subject: course?.total_subject,
         lecture_sheet: course?.lecture_sheet,
         total_exam: course?.total_exam,
-        enrollment_last_date: course?.enrollment_last_date.length > 10 ? course.enrollment_last_date.slice(0, 10) : course.enrollment_last_date,
+        enrollment_last_date:
+          course?.enrollment_last_date.length > 10
+            ? course.enrollment_last_date.slice(0, 10)
+            : course.enrollment_last_date,
         type: course?.type,
         category: course?.category,
+        course_type: course?.course_type,
         status: course?.status,
       });
 

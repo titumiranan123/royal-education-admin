@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import useCourse from "../../../hook/useCourse";
@@ -5,14 +6,54 @@ import useCourse from "../../../hook/useCourse";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Loader from "../../../components/utils/Lodder";
+import Swal from "sweetalert2";
+import api from "../../../redux/api/api";
 
 const Allcourse: React.FC = () => {
-  const { data: course, isLoading } = useCourse();
-  console.log(isLoading)
+  const { data: course, isLoading ,refetch} = useCourse();
+
   if(isLoading){
     return <Loader ></Loader>
   }
+ const deleteCourse = async (id: string) => {
+   const result = await Swal.fire({
+     title: "Are you sure?",
+     text: "You won't be able to revert this!",
+     icon: "warning",
+     showCancelButton: true,
+     confirmButtonColor: "#3085d6",
+     cancelButtonColor: "#d33",
+     confirmButtonText: "Yes, delete it!",
+   });
 
+   if (result.isConfirmed) {
+     try {
+       const { data } = await api.delete(`/api/v1/course/${id}`);
+
+       if (data.success) {
+         refetch();
+         Swal.fire({
+           title: "Deleted!",
+           text: "Course has been deleted successfully",
+           icon: "success",
+         });
+       } else {
+         Swal.fire({
+           title: "Error!",
+           text: "Something went wrong!",
+           icon: "error",
+         });
+       }
+     } catch (error) {
+
+       Swal.fire({
+         title: "Error!",
+         text: "Failed to delete Course",
+         icon: "error",
+       });
+     }
+   }
+ };
   return (
     <div className="text-white min-h-screen max-w-[1240px] mx-auto">
       <div>
@@ -87,7 +128,10 @@ const Allcourse: React.FC = () => {
               >
                 Update
               </Link>
-              <button className="gradient-button py-3 px-5 font-bold ">
+              <button
+                onClick={() => deleteCourse(data.id)}
+                className="gradient-button py-3 px-5 font-bold "
+              >
                 Delete
               </button>
             </div>

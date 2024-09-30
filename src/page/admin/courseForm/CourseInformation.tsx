@@ -18,6 +18,7 @@ const CourseInformation: React.FC<props> = ({
   const handleSubmit = (e: any) => {
     e.preventDefault();
   };
+  console.log(courseInfo)
   const handleFileChange = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -65,7 +66,22 @@ const CourseInformation: React.FC<props> = ({
               onChange={(e: any) => {
                 setCourseInfo({ ...courseInfo, title: e.target.value });
               }}
-              placeholder="course name"
+              placeholder="Enter course title"
+              className="py-2 px-2 bg-[#343335] text-white montserrat outline-none rounded-lg w-full"
+            />
+          </div>
+          <div className="flex flex-col gap-3 mt-2 ">
+            <label className="text-white me-2 font-semibold text-xl flex w-[30%] montserrat">
+              Slug (Route)
+            </label>
+            <input
+              type="text"
+              value={courseInfo.slug}
+              onChange={(e: any) => {
+                setCourseInfo({ ...courseInfo, slug: e.target.value });
+              }}
+             
+              placeholder="Enter course slug (e.g. dhaka-university-c-unit-admission-course)"
               className="py-2 px-2 bg-[#343335] text-white montserrat outline-none rounded-lg w-full"
             />
           </div>
@@ -83,62 +99,104 @@ const CourseInformation: React.FC<props> = ({
                   description: e.target.value,
                 });
               }}
-              placeholder="Course description"
+              placeholder="Enter course description"
               className="p-4 bg-[#343335] text-white montserrat h-[200px]  outline-none rounded-lg w-full"
             ></textarea>
           </div>
-          <div className="flex lg:flex-row flex-col mt-5 justify-between gap-5">
-            <div className="flex flex-col gap-3 w-full">
+          <div className="flex justify-between items-center gap-5">
+            <div className="flex flex-col gap-3 mt-5 w-full">
               <label className="text-white me-2 font-semibold text-[20px] flex items-center montserrat">
-                Course price
+                Type
               </label>
-              <div className="flex  items-center">
-                <input
-                  type="text"
-                  value={courseInfo.price}
-                  onChange={(e: any) => {
-                    setCourseInfo({
-                      ...courseInfo,
-                      price: e.target.value,
-                    });
-                  }}
-                  placeholder="course Price"
-                  className="py-2 px-2 bg-[#343335] text-white outline-none montserrat font-bold rounded-lg "
-                />{" "}
-                <span className="text-white montserrat font-semibold ms-3 text-2xl">
-                  {" "}
-                  Tk.
-                </span>
-              </div>
+              <select
+                required
+                value={courseInfo.type}
+                onChange={(e: any) => {
+                  setCourseInfo({
+                    ...courseInfo,
+                    type: e.target.value,
+                  });
+                }}
+                id="name"
+                className="py-2 bg-[#343335] text-white px-2 montserrat font-semibold outline-none rounded-lg"
+              >
+                <option>Course</option>
+                <option>Exam</option>
+              </select>
             </div>
-            <div className="flex flex-col w-full gap-3">
-              <label className="text-white me-2 font-semibold text-xl flex  items-center montserrat">
-                Discount
+            <div className="flex flex-col gap-3 mt-5 w-full">
+              <label className="text-white me-2 font-semibold text-[20px] flex items-center montserrat">
+                Course Type
               </label>
-              <div className="flex  items-center gap-5">
-                <input
-                  type="text"
-                  value={courseInfo.discount}
-                  onChange={(e: any) => {
-                    setCourseInfo({
-                      ...courseInfo,
-                      discount: e.target.value,
-                    });
-                  }}
-                  placeholder="Discount"
-                  className="py-2 px-2 bg-[#343335] text-white outline-none montserrat font-bold rounded-lg "
-                />{" "}
-                <span className="text-white font-bold text-2xl">%</span>
-              </div>
+              <select
+                required
+                value={courseInfo.course_type}
+                onChange={(e: any) => {
+                  setCourseInfo({
+                    ...courseInfo,
+                    course_type: e.target.value,
+                  });
+                }}
+                id="name"
+                className="py-2 bg-[#343335] text-white px-2 montserrat font-semibold outline-none rounded-lg"
+              >
+                <option>Free Course</option>
+                <option>Paid Course</option>
+                <option>Free Exam</option>
+                <option>Paid Exam</option>
+              </select>
             </div>
           </div>
+          {(courseInfo.course_type === "Paid Course" ||
+            courseInfo.course_type === "Paid Exam") && (
+            <div className="flex lg:flex-row flex-col mt-5 justify-between gap-5">
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-white me-2 font-semibold text-[20px] flex items-center montserrat">
+                  Course price
+                </label>
+                <div className="">
+                  <input
+                    type="text"
+                    value={courseInfo.price}
+                    onChange={(e: any) => {
+                      setCourseInfo({
+                        ...courseInfo,
+                        price: e.target.value,
+                      });
+                    }}
+                    placeholder="Enter course price (e.g. 1200 tk)"
+                    className="py-2 px-2 bg-[#343335] text-white outline-none montserrat font-bold rounded-lg w-full "
+                  />{" "}
+                </div>
+              </div>
+              <div className="flex flex-col w-full gap-3">
+                <label className="text-white me-2 font-semibold text-xl flex  items-center montserrat">
+                  Discount
+                </label>
+                <div className="flex  items-center gap-5">
+                  <input
+                    type="text"
+                    value={courseInfo.discount}
+                    onChange={(e: any) => {
+                      setCourseInfo({
+                        ...courseInfo,
+                        discount: e.target.value,
+                      });
+                    }}
+                    placeholder="Enter discount (e.g. 10%)"
+                    className="py-2 px-2 bg-[#343335] text-white outline-none montserrat font-bold rounded-lg w-full "
+                  />{" "}
+                </div>
+              </div>
+            </div>
+          )}
           <div className="flex lg:flex-row flex-col mt-5 justify-between gap-5">
             <div className="flex flex-col gap-3 w-full">
               <label className="text-white me-2 font-semibold text-[20px] montserrat flex items-center">
                 Total Live Class or Recorded Class
               </label>
               <input
-                type="text"
+                type="number"
                 value={courseInfo.live_class}
                 onChange={(e: any) => {
                   setCourseInfo({
@@ -147,7 +205,7 @@ const CourseInformation: React.FC<props> = ({
                     live_class: e.target.value,
                   });
                 }}
-                placeholder="Total Video"
+                placeholder="Total Video (e.g. 20 videos )"
                 className="py-2 px-2 bg-[#343335] text-white font-bold montserrat outline-none rounded-lg "
               />
             </div>
@@ -166,7 +224,7 @@ const CourseInformation: React.FC<props> = ({
                     total_exam: e.target.value,
                   });
                 }}
-                placeholder="Total Exam"
+                placeholder="Total Exam (e.g 20 exam)"
                 className="py-2 font-bold bg-[#343335] text-white px-2 montserrat outline-none rounded-lg "
               />
             </div>
@@ -174,7 +232,7 @@ const CourseInformation: React.FC<props> = ({
           <div className="flex lg:flex-row flex-col  mt-5 justify-between gap-5">
             <div className="flex flex-col gap-3 w-full">
               <label className="text-white me-2 font-semibold text-[20px] flex items-center montserrat">
-                Total Subject
+                Subject Names
               </label>
               <input
                 required
@@ -185,15 +243,14 @@ const CourseInformation: React.FC<props> = ({
 
                     total_subject: e.target.value,
                   });
-                  console.log(courseInfo);
                 }}
-                placeholder="Total Video"
+                placeholder="Subject Names (e.g. Physic, Chemistry....)"
                 className="py-2 px-2 bg-[#343335] text-white montserrat font-semibold outline-none rounded-lg "
               />
             </div>
             <div className="flex flex-col w-full gap-3">
               <label className="text-white me-2 font-semibold text-xl flex  items-center montserrat">
-                Total Lecutre Sheet
+                Lecutre Sheet
               </label>
               <input
                 value={courseInfo.lecture_sheet}
@@ -204,7 +261,7 @@ const CourseInformation: React.FC<props> = ({
                     lecture_sheet: e.target.value,
                   });
                 }}
-                placeholder="Total Exam"
+                placeholder="Total Lecture Sheet (e.g. 20 ) "
                 className="py-2 px-2 bg-[#343335] text-white montserrat font-semibold outline-none rounded-lg "
               />
             </div>
@@ -225,14 +282,17 @@ const CourseInformation: React.FC<props> = ({
                 }}
                 className="py-2 px-2 bg-[#343335] text-white montserrat font-semibold outline-none rounded-lg"
               >
+                <option>Cadet </option>
                 <option>SSC</option>
                 <option>HSC</option>
                 <option>Admission</option>
+                <option>Skill</option>
+                <option>Job</option>
               </select>
             </div>
             <div className="flex flex-col w-full gap-3">
               <label className="text-white me-2 font-semibold text-xl flex  items-center montserrat">
-                Course Enrollment Last Date
+                Enrollment Last Date
               </label>
               <input
                 type="date"
@@ -249,26 +309,7 @@ const CourseInformation: React.FC<props> = ({
               />
             </div>
           </div>
-          <div className="flex flex-col gap-3 mt-5 w-full">
-            <label className="text-white me-2 font-semibold text-[20px] flex items-center montserrat">
-              Course Type
-            </label>
-            <select
-              required
-              value={courseInfo.type}
-              onChange={(e: any) => {
-                setCourseInfo({
-                  ...courseInfo,
-                  type: e.target.value,
-                });
-              }}
-              id="name"
-              className="py-2 bg-[#343335] text-white px-2 montserrat font-semibold outline-none rounded-lg"
-            >
-              <option>free</option>
-              <option>paid</option>
-            </select>
-          </div>
+
           <div className="bg p-[1px] md:w-[645px]  mt-10 rounded-xl">
             <div className=" bg-[#0D0C11] rounded-xl md:w-[643px]  h-[200px] md:h-[400px]  flex justify-center items-center  ">
               <input
@@ -281,8 +322,9 @@ const CourseInformation: React.FC<props> = ({
               />
               <label
                 htmlFor="file"
-                className={`w-full  p-3  flex items-center justify-center ${dragging ? "bg-blue-500 " : "bg-transparent"
-                  }`}
+                className={`w-full  p-3  flex items-center justify-center ${
+                  dragging ? "bg-blue-500 " : "bg-transparent"
+                }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}

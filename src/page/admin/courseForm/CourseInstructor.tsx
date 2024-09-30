@@ -131,7 +131,7 @@ const CourseInstructor: React.FC<instructorPorp> = ({
                   </label>
                   <input
                     value={data.name}
-                    placeholder="Name"
+                    placeholder="Name (e.g. Rofiq Islam)"
                     className="py-2 px-2 montserrat font-semibold outline-none rounded-lg w-full mt-2"
                     onChange={(e) => {
                       const updatedInstructor = [...instructor];
@@ -146,7 +146,7 @@ const CourseInstructor: React.FC<instructorPorp> = ({
                   </label>
                   <input
                     value={data.experience}
-                    placeholder="Experience"
+                    placeholder="Experience (e.g. 5+)"
                     className="py-2 px-2 outline-none rounded-lg w-full montserrat font-semibold"
                     onChange={(e) => {
                       const updatedInstructor = [...instructor];
@@ -161,7 +161,7 @@ const CourseInstructor: React.FC<instructorPorp> = ({
                   </label>
                   <input
                     value={data.institute}
-                    placeholder="Institute"
+                    placeholder="Institute (e.g. Dhaka University )"
                     className="py-2 px-2 outline-none rounded-lg w-full montserrat font-semibold"
                     onChange={(e) => {
                       const updatedInstructor = [...instructor];
