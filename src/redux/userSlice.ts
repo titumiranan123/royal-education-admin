@@ -31,7 +31,7 @@ export const loginUser = createAsyncThunk(
     try {
       // Make API request
       const response = await api.post("/api/v1/admin/login", credentials);
-      console.log(response.data.data.token);
+  
 
       // Extract access token from response
       const accessToken = response.data.data.token;
@@ -43,7 +43,7 @@ export const loginUser = createAsyncThunk(
       const decodedToken: any = decode(accessToken);
 
       // Redirect after setting the token
-      window.location.href = "/dashboard";
+      window.location.href = "/";
 
       // Return user data and accessToken
       return { user: decodedToken.payload, accessToken };
@@ -62,8 +62,9 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
+      state.isLoading = false;
       Cookies.remove("accessToken");
-      window.location.href='/'
+      window.location.href='/login'
     },
     setAuth(state, action: PayloadAction<{ user: any; accessToken: string }>) {
       const { user, accessToken } = action.payload;
@@ -75,12 +76,14 @@ const authSlice = createSlice({
     clearAuth: (state) => {
       state.user = null;
       state.isAuthenticated = false;
+      state.isLoading=false;
       Cookies.remove("accessToken");
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
+        
         state.isLoading = true;
         state.error = null;
       })
@@ -88,6 +91,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
+        console.log(state.user,"fulfilled")
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

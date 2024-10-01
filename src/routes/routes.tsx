@@ -18,15 +18,11 @@ import Insertmcq from "../page/admin/CourseContent/Insertmcq";
 
 export const routes = createBrowserRouter([
   {
-    path: "/",
-    element: <Loginpage />,
-  },
-  {
     path: "/login",
     element: <Loginpage />,
   },
   {
-    path: "/dashboard",
+    path: "/",
     element: (
       <Privateroute>
         <DashboardLayout />
@@ -39,36 +35,36 @@ export const routes = createBrowserRouter([
       },
 
       {
-        path: "all-course",
+        path: "dashboard/all-course",
         element: <Allcourse />,
       },
 
       {
-        path: "invoice",
+        path: "dashboard/invoice",
         element: <Invoice />,
       },
       {
-        path: "user",
+        path: "dashboard/user",
         element: <Users />,
       },
       {
-        path: "add-user",
+        path: "dashboard/add-user",
         element: <Adduser />,
       },
       {
-        path: "update-user/:id",
+        path: "dashboard/update-user/:id",
         element: <UpdateUser />,
       },
       {
-        path: "create-course",
+        path: "dashboard/create-course",
         element: <Createcourse />,
       },
       {
-        path: "mannage-team",
+        path: "dashboard/mannage-team",
         element: <Mannagement />,
       },
       {
-        path: "course",
+        path: "dashboard/course",
         element: <Updatelayout />,
         children: [
           {
@@ -80,8 +76,8 @@ export const routes = createBrowserRouter([
             element: <CourseContent />,
           },
           {
-            path:"insert-mcq/:id",
-            element:<Insertmcq />
+            path: "insert-mcq/:id",
+            element: <Insertmcq />,
           },
         ],
       },

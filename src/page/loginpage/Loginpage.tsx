@@ -1,68 +1,103 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from "react";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
-
-import {  loginUser } from "../../redux/userSlice";
-import { AppDispatch } from "../../redux/Store";
-
-
+import { clearAuth, loginUser, setAuth } from "../../redux/userSlice";
+import { AppDispatch, RootState } from "../../redux/Store";
+import Loader from "../../components/utils/Lodder";
+import { decode } from "jwt-js-decode";
+ // Assuming you have a Loader component
+import Cookies from "js-cookie";
 type Inputs = {
   email: string;
   password: string;
 };
 
 const Loginpage: React.FC = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
-   const dispatch: AppDispatch = useDispatch();
-  const from = location.state?.from?.pathname || "/dashboard";
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
+  const from = location.state?.from?.pathname || "/"; // Redirect to this page after login
+  const user = useSelector((state: RootState) => state.user); // Accessing user state, including isLoading
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
- const onSubmit: SubmitHandler<Inputs> = async (data) => {
-   try {
-     const actionResult = await dispatch(
-       loginUser({ email: data.email, password: data.password })
-     );
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      const actionResult = await dispatch(
+        loginUser({ email: data.email, password: data.password })
+      );
 
-     // Handle success or failure based on action result
+      if (loginUser.fulfilled.match(actionResult)) {
+        navigate(from, { replace: true });
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Login successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Login failed",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "An error occurred during login",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
 
-     if (loginUser.fulfilled.match(actionResult)) {
-       navigate(from,{replace:true});
-       Swal.fire({
-         position: "center",
-         icon: "success",
-         title: "Login successful",
-         showConfirmButton: false,
-         timer: 1500,
-       });
-     } else {
-       Swal.fire({
-         position: "center",
-         icon: "error",
-         title: "Login failed",
-         showConfirmButton: false,
-         timer: 1500,
-       });
-     }
-   } catch (error) {
-     Swal.fire({
-       position: "center",
-       icon: "error",
-       title: "An error occurred during login",
-       showConfirmButton: false,
-       timer: 1500,
-     });
-   }
- };
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const decoded: any = decode(token);
+    const currentTime = Date.now() / 1000;
+    return decoded?.exp && decoded.exp < currentTime;
+  } catch (error) {
+    return true;
+  }
+};
+
+useEffect(() => {
+  const token = Cookies.get("accessToken");
+  if (token && !isTokenExpired(token)) {
+    try {
+      const decoded = decode(token) as any;
+      dispatch(setAuth({ user: decoded, accessToken: token }));
+    } catch (error) {
+      Cookies.remove("accessToken");
+      dispatch(clearAuth());
+    }
+  } else {
+    Cookies.remove("accessToken");
+    dispatch(clearAuth());
+  }
+}, [dispatch]);
+  // Show loader if user is in loading state
+  if (user.isLoading) {
+    return <Loader />; // Display a loader while the login request is processing
+  }
+
+  // Redirect if user is already authenticated
+  if (user.isAuthenticated) {
+    return <Navigate to={"/"} />;
+  }
 
   return (
     <div className="max-w-[1440px] min-h-screen mx-auto relative py-10">
@@ -76,9 +111,8 @@ const Loginpage: React.FC = () => {
           <div className="mt-[85px] p-[2px] rounded-lg">
             <div className="w-[95%] mx-auto md:w-[500px] flex justify-center items-center px-10  flex-col rounded-lg h-full bg-[#201E35]">
               <div className="mt-[32px] text-white text-[20px] font-bold">
-             Welcome Back !
+                Welcome Back!
               </div>
-             
 
               <div className="py-[29px] px-[22px]">
                 <form
