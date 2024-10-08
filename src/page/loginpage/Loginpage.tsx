@@ -48,7 +48,7 @@ const Loginpage: React.FC = () => {
         Swal.fire({
           position: "center",
           icon: "error",
-          title: "Login failed",
+          title: `${actionResult?.payload}`,
           showConfirmButton: false,
           timer: 1500,
         });

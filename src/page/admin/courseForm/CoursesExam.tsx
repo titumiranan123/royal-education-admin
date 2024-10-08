@@ -38,6 +38,7 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
 
     useEffect(() => {
         const course = data?.find((p: Course) => p.id === id);
+ 
         if (course) {
             const initialData = course.course_content.map((subject: any) => ({
                 subject_id: subject.id,
@@ -136,7 +137,8 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
           // API call to create the exam
           return api
             .post("/api/v1/create-exam", data)
-            .then((_response) => {
+            .then((response) => {
+              console.log(response)
               refetch();
               Swal.fire("Exam Created!", "", "success");
             })
@@ -331,7 +333,10 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                         {exam.exam_type !== "written" ? (
                           <Link
                             to={`/dashboard/course/insert-mcq/${exam.id}`}
-                            className="text-yellow-500 hover:text-yellow-700"
+                            className={`text-yellow-500 hover:text-yellow-700 `}
+                            onClick={()=>{
+                              console.log(section);
+                            }}
                           >
                             Mcq Upload
                           </Link>
@@ -343,12 +348,15 @@ const CoursesExam: React.FC<Props> = ({ id }) => {
                             Questions Upload
                           </button>
                         )}
-                        {exam.publish==="false" ? (
+                        {exam.publish === "false" ? (
                           <button className="text-gray-500 hover:text-yellow-700">
                             <MdOutlineUnpublished size={20} />
                           </button>
                         ) : (
-                          <button title='published' className="text-yellow-600 pointer-events-none">
+                          <button
+                            title="published"
+                            className="text-yellow-600 pointer-events-none"
+                          >
                             <MdOutlinePublishedWithChanges size={20} />
                           </button>
                         )}

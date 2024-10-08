@@ -10,8 +10,8 @@ const QuizForm = ({ examId }: any) => {
   const [question_text, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", "", ""]);
   const [answer, setAnswer] = useState("");
- const { data } = useExam(examId);
- console.log(data)
+ const { data, refetch } = useExam(examId);
+
   const handleOptionChange = (index: any, value: any) => {
     const newOptions = [...options];
     newOptions[index] = value;
@@ -30,6 +30,7 @@ const QuizForm = ({ examId }: any) => {
     api
       .post("/api/v1/insert-mcq", data)
       .then((_response) => {
+        refetch()
         Swal.fire("MCQ uploaded!", "", "success");
       })
       .catch((_error) => {
@@ -54,6 +55,7 @@ const QuizForm = ({ examId }: any) => {
     }),
     [placeholder]
   );
+  
     const optionConfig = useMemo(
       () => ({
         readonly: false, // Enables editing
@@ -103,7 +105,7 @@ const QuizForm = ({ examId }: any) => {
           <label className="block text-lg font-medium text-gray-700 mb-2">
             Question:
           </label>
-          <div className="border question border-gray-300 rounded-md h-[300px] bg-gray-50 transition duration-150 ease-in-out">
+          <div className="border question border-gray-300 rounded-md  bg-gray-50 h-[300px] transition duration-150 ease-in-out">
             <JoditEditor
               ref={editor}
               value={question_text}

@@ -29,8 +29,9 @@ const Updatecourse: React.FC = () => {
     lecture_sheet: "",
     total_exam: "",
     enrollment_last_date: "",
-    type: " ",
+    type: "",
     category: "",
+    version:'',
     course_type: "",
     status: "",
   });
@@ -45,9 +46,6 @@ const Updatecourse: React.FC = () => {
       institute: "",
     },
   ]);
-  //  course content
-  const [courseContentData, setCourseContentData] = useState([]);
-
   useEffect(() => {
     const course = data?.find((p: Course) => p.id === id);
     if (course) {
@@ -68,6 +66,7 @@ const Updatecourse: React.FC = () => {
             : course.enrollment_last_date,
         type: course?.type,
         category: course?.category,
+        version:course?.version,
         course_type: course?.course_type,
         status: course?.status,
       });
@@ -76,7 +75,6 @@ const Updatecourse: React.FC = () => {
       setDetails(course?.course_details || []);
       setInstructor(course?.course_instructors || []);
 
-      setCourseContentData(course.course_content);
     }
   }, [data, id]);
 
@@ -87,7 +85,6 @@ const Updatecourse: React.FC = () => {
       course_details: courseDetails,
       course_instructors: instructor,
       course_benefits: benefits,
-      course_content: [...courseContentData]
     };
 
     try {

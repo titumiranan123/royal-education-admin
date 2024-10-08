@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React from "react";
 
-import { FaSearch } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
 import useUser from "../../hook/useUser";
@@ -13,17 +12,12 @@ import Swal from "sweetalert2";
 // The main Users component
 const Mannagement: React.FC = () => {
   const { data, isLoading, refetch } = useUser();
-  const [searchTerm, setSearchTerm] = useState("");
+
 
   // Filtering the user list to show only admins
   const adminUsers = data?.data.filter((user: any) => user.role === "admin");
 
-  // Filtering admin users based on search term
-  const filteredAdmins = adminUsers?.filter(
-    (user: any) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+ 
 
   return (
     <div className="mt-2 px-4 md:px-8 min-h-screen">
@@ -40,19 +34,6 @@ const Mannagement: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="flex flex-wrap gap-5 items-center justify-between">
-        <div className="bg p-[2px] rounded-lg flex-grow max-w-lg">
-          <div className="text-white bg-[#272758] rounded-lg px-4 flex items-center gap-2">
-            <input
-              type="text"
-              placeholder="Search by name or email"
-              className="px-4 py-2 outline-none focus:outline-none rounded-lg bg-[#272758] w-full"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <FaSearch className="text-xl" />
-          </div>
-        </div>
-      </div>
 
       <div className="bg h-[2px] w-full mt-4"></div>
 
@@ -71,7 +52,7 @@ const Mannagement: React.FC = () => {
         {isLoading && <Loader />}
 
         {/* Admin Data */}
-        {filteredAdmins?.map((user: any) => (
+        {adminUsers?.map((user: any) => (
           <div
             className="text-lg border-b border-[#2c285f] bg-[#131129] text-white font-semibold grid grid-cols-1 md:grid-cols-4"
             key={user.id}

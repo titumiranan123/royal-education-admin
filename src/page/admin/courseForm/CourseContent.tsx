@@ -9,10 +9,11 @@ import { Course } from "../Interface/Courseinterface";
 import CourseContentcard from "./CourseContentcard";
 import CoursesExam from "./CoursesExam";
 import api from "../../../redux/api/api";
+import Loader from "../../../components/utils/Lodder";
 
 const CourseContent: React.FC = () => {
     const { id: courseId } = useParams();
-    const { data, refetch } = useCourse();
+    const { data, refetch,isLoading } = useCourse();
     const [courseContentData, setCourseContentData] = useState([
         {
             subject_id: '',
@@ -34,19 +35,19 @@ const CourseContent: React.FC = () => {
 
 
     useEffect(() => {
-        const course = data?.find((p: Course) => p.id === courseId);
+        const course = data?.find((p: Course) => p?.id === courseId);
         if (course) {
-            const initialData = course.course_content.map((subject: any) => ({
-                subject_id: subject.id,
-                subject_name: subject.subject_name ? subject.subject_name : "Section 1",
-                subject_content: subject.subject_content.length > 0
-                    ? subject.subject_content.map((content: any) => ({
-                        id:content.id,
-                        video_title: content.video_title,
-                        video_link: content.video_link,
-                        video_duration: content.video_duration,
-                        pdf_title: content.pdf_title,
-                        pdf_link: content.pdf_link,
+            const initialData = course?.course_content?.map((subject: any) => ({
+                subject_id: subject?.id,
+                subject_name: subject?.subject_name ? subject?.subject_name : "Section 1",
+                subject_content: subject?.subject_content?.length > 0
+                    ? subject?.subject_content?.map((content: any) => ({
+                        id:content?.id,
+                        video_title: content?.video_title,
+                        video_link: content?.video_link,
+                        video_duration: content?.video_duration,
+                        pdf_title: content?.pdf_title,
+                        pdf_link: content?.pdf_link,
                     }))
                     : [
                         {
@@ -68,7 +69,7 @@ const CourseContent: React.FC = () => {
     const addNewSection = (id:string) => {
         const newSection = {
             subject_id: '',
-            subject_name: `Section ${courseContentData.length + 1}`,
+            subject_name: `Section ${courseContentData?.length + 1}`,
             subject_content: [
                 {
                     id:'',
@@ -82,21 +83,19 @@ const CourseContent: React.FC = () => {
             isExpanded: true, // Initially expanded
         };
         const data = {
-          subject_name: `Section ${courseContentData.length + 1}`,
+          subject_name: `Section ${courseContentData?.length + 1}`,
           course_id: id,
         };
         api.post("/api/v1/subject", data)
-        .then((res)=>{
-          console.log(res)
+        .then((_res)=>{
+
            refetch();
            Swal.fire("subject created!", "", "success");
         })
-        .catch((err)=>{
-console.log(err)
+        .catch((_err)=>{
  Swal.fire("subject create failed !", "", "error");
         })
         setCourseContentData([...courseContentData, newSection]);
-
     };
 
     const updateSubject = (subject: any, courseId:string) => {
@@ -158,7 +157,7 @@ const handleDeleteSection = (id: string) => {
       api
         .delete(`/api/v1/subject/${id}`)
         .then((_response) => {
-        
+        refetch()
           Swal.fire("Deleted!", "Your section has been deleted.", "success");
         })
         .catch((_err) => {
@@ -439,6 +438,9 @@ const handleDeleteSection = (id: string) => {
         console.log(id)
     }
 
+    if(isLoading){
+      return <Loader />
+    }
     return (
       <div className="flex p-4 gap-5 ">
         <div className="w-1/2 p-4 rounded-lg shadow-md">

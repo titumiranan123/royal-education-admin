@@ -97,11 +97,11 @@ const [isOpen, setIsOpen] = useState(false);
             <nav className="bg-black   flex flex-col gap-2 mx-auto min-h-screen">
               <div
                 className={`flex items-center ms-4 px-14 ${
-                  location.pathname === "/dashboard" && "bg"
+                  location.pathname === "/" && "bg"
                 }`}
               >
                 <a
-                  href="/dashboard"
+                  href="/"
                   className="flex items-center py-2 text-white  rounded-lg "
                 >
                   <RiDashboardLine className="w-5 h-5  transition duration-75 " />
@@ -139,17 +139,7 @@ const [isOpen, setIsOpen] = useState(false);
                       Users
                     </span>
                   </Link>
-                  {/* <Link
-                    to={"/dashboard/mcq-store"}
-                    className={`flex items-center ms-4 px-14 py-2 ${
-                      location.pathname === "/dashboard/user" && "bg"
-                    }`}
-                  >
-                    <FaUsers className="text-xl text-white" />
-                    <span className="ms-3 text-white montserrat font-semibold">
-                      MCQ store
-                    </span>
-                  </Link> */}
+                 
                   <Link
                     to="/dashboard/invoice"
                     className={`flex items-center ms-4 px-14 py-2 cursor-pointer ${
@@ -181,17 +171,7 @@ const [isOpen, setIsOpen] = useState(false);
                       Create Course
                     </span>
                   </Link>
-                  {/* <Link
-                    to={"/dashboard/live-course"}
-                    className={`flex items-center ms-4 px-14 py-2 cursor-pointer ${
-                      location.pathname === "/dashboard/live-course" && "bg"
-                    }`}
-                  >
-                    <FaFileVideo className="text-xl text-white" />
-                    <span className="ms-3 text-white montserrat font-semibold">
-                      Live Course
-                    </span>
-                  </Link> */}
+                  
                 </div>
               </div>
               <div className="">
@@ -215,19 +195,7 @@ const [isOpen, setIsOpen] = useState(false);
                   </Link>
                 </div>
               </div>
-              <div className="px-14">
-                {/* <span className="ms-2 text-[20px] text-white gradient-text montserrat font-bold">
-              Analytics
-            </span> */}
-                {/* <div className="flex flex-col gap-2">
-              <div className="flex items-center ms-4 mt-2">
-                <IoMdAnalytics className="text-xl text-white" />
-                <Link to={"/"}>
-                  <span className="ms-3 text-white montserrat font-semibold">Course Analytics </span>
-                </Link>
-              </div>
-            </div> */}
-              </div>
+            
               <div className="flex justify-center items-center mt-14">
                 <div className="p-[1px] w-[207px] rounded-lg bg">
                   <a
@@ -262,7 +230,7 @@ const [isOpen, setIsOpen] = useState(false);
 const Sidebar: React.FC = () => {
   const location = useLocation();
  const {user} = useSelector((state: RootState) => state.user);
- console.log(user.photoUrl)
+ 
 const dispatch = useDispatch()
   return (
     <div className="w-full sticky top-0 left-0  bg-gradient-to-tr min-h-screen from-[#DC02CE] to-[#5C53FE] pe-[2px]">
@@ -277,11 +245,11 @@ const dispatch = useDispatch()
         <nav className="bg-black   flex flex-col gap-2 mx-auto min-h-screen">
           <div
             className={`flex items-center ms-4 px-14 ${
-              location.pathname === "/dashboard" && "bg"
+              location.pathname === "/" && "bg"
             }`}
           >
             <a
-              href="/dashboard"
+              href="/"
               className="flex items-center py-2 text-white  rounded-lg "
             >
               <RiDashboardLine className="w-5 h-5  transition duration-75 " />
@@ -308,17 +276,7 @@ const dispatch = useDispatch()
                   All Course
                 </span>
               </Link>
-              {/* <Link
-                to={"/dashboard/mcq-store"}
-                className={`flex items-center ms-4 px-14 py-2 ${
-                  location.pathname === "/dashboard/mcq-store" && "bg"
-                }`}
-              >
-                <FaStore className="text-xl text-white" />
-                <span className="ms-3 text-white montserrat font-semibold">
-                  MCQ store
-                </span>
-              </Link> */}
+             
               <Link
                 to={"/dashboard/user"}
                 className={`flex items-center ms-4 px-14 py-2 ${
@@ -361,17 +319,7 @@ const dispatch = useDispatch()
                   Create Course
                 </span>
               </Link>
-              {/* <Link
-                to={"/dashboard/live-course"}
-                className={`flex items-center ms-4 px-14 py-2 cursor-pointer ${
-                  location.pathname === "/dashboard/live-course" && "bg"
-                }`}
-              >
-                <FaFileVideo className="text-xl text-white" />
-                <span className="ms-3 text-white montserrat font-semibold">
-                  Live Course
-                </span>
-              </Link> */}
+              
             </div>
           </div>
           <div className="">
@@ -395,19 +343,7 @@ const dispatch = useDispatch()
               </Link>
             </div>
           </div>
-          <div className="px-14">
-            {/* <span className="ms-2 text-[20px] text-white gradient-text montserrat font-bold">
-              Analytics
-            </span> */}
-            {/* <div className="flex flex-col gap-2">
-              <div className="flex items-center ms-4 mt-2">
-                <IoMdAnalytics className="text-xl text-white" />
-                <Link to={"/"}>
-                  <span className="ms-3 text-white montserrat font-semibold">Course Analytics </span>
-                </Link>
-              </div>
-            </div> */}
-          </div>
+          
           <div className="flex justify-center items-center mt-14">
             <div className="p-[1px] w-[207px] rounded-lg bg">
               <button

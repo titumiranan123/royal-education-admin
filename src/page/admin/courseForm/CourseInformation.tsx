@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useState } from "react";
+import JoditEditor from "jodit-react";
+import React, { useMemo, useState } from "react";
 
 type props = {
   courseInfo: any;
@@ -14,11 +15,43 @@ const CourseInformation: React.FC<props> = ({
   active,
   setActive,
 }) => {
+ 
+
+const editorConfig = useMemo(
+  () => ({
+    readonly: false,
+    height: 200,
+
+    toolbarSticky: false,
+    buttons: [
+      "bold",
+      "italic",
+      "underline",
+      "|",
+      "ul",
+      "ol",
+      "|",
+      "link",
+      "image",
+      "|",
+      "align",
+      "undo",
+      "redo",
+      "|",
+      "fullsize",
+      "about",
+    ],
+    uploader: { insertImageAsBase64URI: true },
+    style: { backgroundColor: "#343335", color: "white" },
+    placeholder: "Enter course description...",
+  }),
+  []
+);
   const [dragging, setDragging] = useState(false);
   const handleSubmit = (e: any) => {
     e.preventDefault();
   };
-  console.log(courseInfo)
+
   const handleFileChange = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -70,38 +103,82 @@ const CourseInformation: React.FC<props> = ({
               className="py-2 px-2 bg-[#343335] text-white montserrat outline-none rounded-lg w-full"
             />
           </div>
-          <div className="flex flex-col gap-3 mt-2 ">
-            <label className="text-white me-2 font-semibold text-xl flex w-[30%] montserrat">
-              Slug (Route)
-            </label>
-            <input
-              type="text"
-              value={courseInfo.slug}
-              onChange={(e: any) => {
-                setCourseInfo({ ...courseInfo, slug: e.target.value });
-              }}
-             
-              placeholder="Enter course slug (e.g. dhaka-university-c-unit-admission-course)"
-              className="py-2 px-2 bg-[#343335] text-white montserrat outline-none rounded-lg w-full"
-            />
-          </div>
+
           <br />
           <div className="flex montserrat flex-col gap-3">
             <label className="text-white me-2 font-semibold text-xl flex w-[30%]">
               Course Description
             </label>
-
-            <textarea
-              value={courseInfo.description}
-              onChange={(e: any) => {
-                setCourseInfo({
-                  ...courseInfo,
-                  description: e.target.value,
-                });
-              }}
-              placeholder="Enter course description"
-              className="p-4 bg-[#343335] text-white montserrat h-[200px]  outline-none rounded-lg w-full"
-            ></textarea>
+           
+            <div className="border question  rounded-md   h-[300px] transition duration-150 ease-in-out">
+              <JoditEditor
+                value={courseInfo.description}
+                config={editorConfig}
+                onBlur={(content: string) => {
+                  setCourseInfo({
+                    ...courseInfo,
+                    description: content,
+                  });
+                }}
+                onChange={(content: string) => {
+                  console.log(content)
+                  setCourseInfo({
+                    ...courseInfo,
+                    description: content,
+                  });
+                }}
+              />
+            </div>
+          </div>
+          <div className="flex lg:flex-row flex-col  mt-5 justify-between gap-5">
+            <div className="flex flex-col gap-3 w-full">
+              <label className="text-white me-2 font-semibold text-[20px] flex items-center montserrat">
+                Course Category
+              </label>
+              <select
+                required
+                value={courseInfo.category}
+                onChange={(e: any) => {
+                  setCourseInfo({
+                    ...courseInfo,
+                    category: e.target.value,
+                  });
+                }}
+                className="py-2 px-2 bg-[#343335] text-white montserrat font-semibold outline-none rounded-lg"
+              >
+                <option value="" disabled selected>
+                  Select Category
+                </option>
+                <option>Cadet </option>
+                <option>SSC</option>
+                <option>HSC</option>
+                <option>Admission</option>
+                <option>Skill</option>
+                <option>Job</option>
+              </select>
+            </div>
+            <div className="flex flex-col gap-3 w-full">
+              <label className="text-white me-2 font-semibold text-[20px] flex items-center montserrat">
+                Course Version
+              </label>
+              <select
+                required
+                value={courseInfo.version}
+                onChange={(e: any) => {
+                  setCourseInfo({
+                    ...courseInfo,
+                    version: e.target.value,
+                  });
+                }}
+                className="py-2 px-2 bg-[#343335] text-white montserrat font-semibold outline-none rounded-lg"
+              >
+                <option value="" disabled selected>
+                  Select Version
+                </option>
+                <option>English Version</option>
+                <option>Bangla Version</option>
+              </select>
+            </div>
           </div>
           <div className="flex justify-between items-center gap-5">
             <div className="flex flex-col gap-3 mt-5 w-full">
@@ -120,6 +197,9 @@ const CourseInformation: React.FC<props> = ({
                 id="name"
                 className="py-2 bg-[#343335] text-white px-2 montserrat font-semibold outline-none rounded-lg"
               >
+                <option value="" disabled selected>
+                  Select Type
+                </option>
                 <option>Course</option>
                 <option>Exam</option>
               </select>
@@ -140,6 +220,9 @@ const CourseInformation: React.FC<props> = ({
                 id="name"
                 className="py-2 bg-[#343335] text-white px-2 montserrat font-semibold outline-none rounded-lg"
               >
+                <option value="" disabled selected>
+                  Select option
+                </option>
                 <option>Free Course</option>
                 <option>Paid Course</option>
                 <option>Free Exam</option>
@@ -201,7 +284,6 @@ const CourseInformation: React.FC<props> = ({
                 onChange={(e: any) => {
                   setCourseInfo({
                     ...courseInfo,
-
                     live_class: e.target.value,
                   });
                 }}
@@ -267,30 +349,22 @@ const CourseInformation: React.FC<props> = ({
             </div>
           </div>
           <div className="flex lg:flex-row flex-col  mt-5 justify-between gap-5">
-            <div className="flex flex-col gap-3 w-full">
-              <label className="text-white me-2 font-semibold text-[20px] flex items-center montserrat">
-                Course Category
+            <div className="flex flex-col gap-3   lg:w-1/2">
+              <label className="text-white me-2 font-semibold text-xl flex  montserrat">
+                Slug (Route)
               </label>
-              <select
-                required
-                value={courseInfo.category}
+              <input
+                type="text"
+                value={courseInfo.slug}
                 onChange={(e: any) => {
-                  setCourseInfo({
-                    ...courseInfo,
-                    category: e.target.value,
-                  });
+                  setCourseInfo({ ...courseInfo, slug: e.target.value });
                 }}
-                className="py-2 px-2 bg-[#343335] text-white montserrat font-semibold outline-none rounded-lg"
-              >
-                <option>Cadet </option>
-                <option>SSC</option>
-                <option>HSC</option>
-                <option>Admission</option>
-                <option>Skill</option>
-                <option>Job</option>
-              </select>
+                placeholder="slug (e.g. du-a-unit-admission-course)"
+                className="py-2 px-2 bg-[#343335] text-white montserrat outline-none rounded-lg w-full"
+              />
             </div>
-            <div className="flex flex-col w-full gap-3">
+
+            <div className="flex flex-col lg:w-1/2 gap-3">
               <label className="text-white me-2 font-semibold text-xl flex  items-center montserrat">
                 Enrollment Last Date
               </label>
@@ -309,7 +383,25 @@ const CourseInformation: React.FC<props> = ({
               />
             </div>
           </div>
-
+          <div className="mt-4">
+            <label className="text-white me-2 font-semibold text-xl flex  items-center montserrat">
+              Thumnail URL
+            </label>
+            <input
+              className="py-2 px-2 mt-2 montserrat w-full font-semibold outline-none rounded-lg bg-[#343335] text-white"
+              type="text"
+              value={
+                courseInfo.thumbnail.length < 200 ? courseInfo.thumbnail : ""
+              }
+              onChange={(e: any) => {
+                setCourseInfo({
+                  ...courseInfo,
+                  thumbnail: e.target.value,
+                });
+              }}
+              placeholder="image url"
+            />
+          </div>
           <div className="bg p-[1px] md:w-[645px]  mt-10 rounded-xl">
             <div className=" bg-[#0D0C11] rounded-xl md:w-[643px]  h-[200px] md:h-[400px]  flex justify-center items-center  ">
               <input

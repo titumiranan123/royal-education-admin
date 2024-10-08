@@ -14,12 +14,14 @@ import Adduser from "../page/adduser/Adduser";
 import UpdateUser from "../page/updateUser/updateUser";
 import Mannagement from "../page/Mannagement/Mannagement";
 import Insertmcq from "../page/admin/CourseContent/Insertmcq";
+import ErrorPage from "../page/Error/Error";
 
 
 export const routes = createBrowserRouter([
   {
     path: "/login",
     element: <Loginpage />,
+    errorElement:<ErrorPage />
   },
   {
     path: "/",
@@ -28,6 +30,7 @@ export const routes = createBrowserRouter([
         <DashboardLayout />
       </Privateroute>
     ),
+    errorElement:<ErrorPage />,
     children: [
       {
         path: "",

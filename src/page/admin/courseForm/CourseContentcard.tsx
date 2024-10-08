@@ -34,7 +34,10 @@ const CourseContentcard: React.FC<CourseContentCardProps> = ({
     <div className="mb-2 flex justify-between items-center bg-gray-800 p-2 rounded-lg">
       <div className="flex flex-col">
         <span className="font-bold text-lg text-gray-300">{`Class ${index}: ${video_title}`}</span>
-        <span className="text-gray-300">{`Duration: ${video_duration} mins`}</span>
+        <span className="text-gray-300">
+          {`Duration: ${video_duration} mins`}
+
+        </span>
         <a
           href={video_link}
           target="_blank"

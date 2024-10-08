@@ -24,9 +24,10 @@ const Createcourse: React.FC = () => {
     lecture_sheet: "",
     total_exam: "",
     enrollment_last_date: "",
-    type: " ",
+    type: "",
     category: "",
     course_type:"",
+    version:'',
     status: "active",
   });
   
