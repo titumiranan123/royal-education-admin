@@ -149,7 +149,8 @@ const editorConfig = useMemo(
                 <option value="" disabled selected>
                   Select Category
                 </option>
-                <option>Cadet </option>
+                <option>Cadet Admission </option>
+                <option>Class 7-8</option>
                 <option>SSC</option>
                 <option>HSC</option>
                 <option>Admission</option>
